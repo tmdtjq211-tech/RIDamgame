@@ -491,8 +491,11 @@ typingInput.addEventListener('input', function() {
 document.addEventListener('click', () => { if(isPlaying && controlMode === 'typing') typingInput.focus(); });
 
 function processHitSuccess(targetNote, hitX) {
-    targetNote.active = false; 
-    score += 50 + combo*2; combo++; wordIdx++; correctMissCount = 0;
+    targetNote.active = false; 
+    let earned = 50 + combo*2;
+    if (isRealMode) earned *= 2; // 🔥 실전 모드는 점수 2배 보너스!!
+    score += earned; 
+    combo++; wordIdx++; correctMissCount = 0;
     spawnParticles(hitX, targetNote.y, "#4ade80"); playSound('hit'); updateVerseUI();
     
     let activeCorrectNotes = notes.filter(n => n.isCorrect && n.active).length;
