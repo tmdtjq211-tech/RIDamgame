@@ -13,7 +13,7 @@ body { margin: 0; background-color: #020617; font-family: 'Noto Serif KR', serif
 canvas { display: block; width: 100vw; height: 100vh; }
 .hidden { display: none !important; }
 
-.screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: rgba(2, 6, 23, 0.95); z-index: 100; overflow-y: auto; padding: 30px 15px; }
+.screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: rgba(2, 6, 23, 0.95); z-index: 100; overflow-y: auto; padding: 20px 15px; }
 .screen-center { justify-content: center; }
 
 .title { font-size: 2.2rem; font-weight: 900; color: #fbbf24; margin-bottom: 1rem; text-align: center; text-shadow: 0 0 15px #fbbf24; line-height: 1.2;}
@@ -21,21 +21,20 @@ canvas { display: block; width: 100vw; height: 100vh; }
 .btn:active { transform: scale(0.95); }
 .btn-outline { background: transparent; border: 2px solid #64748b; color: white; box-shadow: none; }
 
-.track-list { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
-.track-item { background: rgba(30, 41, 59, 0.9); border: 2px solid #475569; border-radius: 10px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; position: relative; overflow: hidden;}
+.track-list { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; max-height: 200px; overflow-y: auto; padding-right: 5px; }
+.track-item { background: rgba(30, 41, 59, 0.9); border: 2px solid #475569; border-radius: 10px; padding: 10px 12px; cursor: pointer; display: flex; flex-direction: column; position: relative; overflow: hidden;}
 .track-item:hover { border-color: #3b82f6; }
-.track-title { font-size: 1rem; font-weight: 900; color: #60a5fa; margin-bottom: 2px; }
-.track-desc { font-size: 0.75rem; color: #94a3b8; }
-.track-score { font-size: 0.75rem; color: #fbbf24; margin-top: 2px; font-weight: bold; }
+.track-title { font-size: 0.95rem; font-weight: 900; color: #60a5fa; margin-bottom: 2px; }
+.track-score { font-size: 0.75rem; color: #fbbf24; font-weight: bold; }
 .badge-clear { position: absolute; top: -8px; right: -20px; background: #4ade80; color: black; font-weight: 900; font-size: 0.7rem; padding: 12px 20px 4px 20px; transform: rotate(45deg); box-shadow: 0 2px 5px rgba(0,0,0,0.5);}
 .speedrun-bg { background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(127, 29, 29, 0.6)); border-color: #7f1d1d; }
 .speedrun-bg .track-title { color: #f87171; }
 
-.setting-group { background: rgba(30, 41, 59, 0.8); border: 1px solid #475569; border-radius: 10px; padding: 12px; margin-bottom: 10px; width: 100%; max-width: 400px; text-align: left; }
-.setting-title { font-size: 0.85rem; font-weight: bold; margin-bottom: 6px; }
+.setting-group { background: rgba(30, 41, 59, 0.8); border: 1px solid #475569; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; width: 100%; max-width: 400px; text-align: left; }
+.setting-title { font-size: 0.8rem; font-weight: bold; margin-bottom: 4px; }
 
 .radio-container { display: flex; gap: 3px; width: 100%; }
-.radio-label { flex: 1; text-align: center; padding: 8px 0; background: #1e293b; border: 1px solid #475569; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: bold; white-space: nowrap; letter-spacing: -0.5px;}
+.radio-label { flex: 1; text-align: center; padding: 6px 0; background: #1e293b; border: 1px solid #475569; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: bold; white-space: nowrap; letter-spacing: -0.5px;}
 
 input[type="radio"]:checked + .radio-label { background: #3b82f6; border-color: #60a5fa; color: white; }
 input[type="radio"] { display: none; }
@@ -68,7 +67,6 @@ backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 .guide-li { margin-bottom: 12px; line-height: 1.5; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;}
 .guide-li:last-child { border-bottom: none; }
 
-/* 스크롤바 디자인 */
 .track-list::-webkit-scrollbar { width: 6px; }
 .track-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
 .track-list::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
@@ -93,21 +91,12 @@ backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 <div class="guide-li"><span class="text-purple-400 font-bold">생명력(❤️) 감소 조건</span><br>정답을 놓치거나, 오답을 잘못 치면 실수 스택이 쌓이며, <b>2번 실수마다</b> 하트가 깎입니다.</div>
 </div>
 
-<div class="setting-group text-xs" style="max-width: 100%;">
-<div class="text-lg font-bold text-white mb-2 border-b border-gray-600 pb-1">⚙️ 버튼/옵션 설명</div>
-<div class="guide-li"><b>[조작: 터치(5레인)]</b>: 노트를 터치하거나, 키보드 <b>1~5</b> (A,S,D,K,L)를 눌러 타격.</div>
-<div class="guide-li"><b>[조작: 타이핑]</b>: 정답을 키보드로 치세요 (띄어쓰기 무시). 타이핑 모드는 자동으로 0.5배속 보정됩니다!</div>
-<div class="guide-li"><b>[속도 조절 (5단계)]</b>: 초보자를 위한 '아주 느림'부터 고인물용 '매우 빠름'까지 제공.</div>
-<div class="guide-li"><b>[실전 모드]</b>: 힌트(테두리 색깔)가 사라지고 올 화이트로 승부합니다.</div>
-</div>
-
 <button class="btn btn-outline mb-8" onclick="showScreen('screen-main')">메인으로 돌아가기</button>
 </div>
 
 <div id="screen-setup" class="screen hidden">
-<h2 class="text-xl font-black mb-3 text-white">트랙 선택 (클릭 시 바로 시작)</h2>
+<h2 class="text-lg font-black mb-2 text-white">트랙 선택 (클릭 시 바로 시작)</h2>
 
-<!-- 범위 선택 라디오 버튼 -->
 <div class="setting-group">
 <div class="setting-title text-emerald-400">📅 범위 (분기) 선택</div>
 <div class="radio-container">
@@ -121,7 +110,7 @@ backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 <div id="track-list-container" class="track-list"></div>
 
 <div class="setting-group">
-<div class="setting-title text-yellow-400">🕹️ 조작 방식 (타이핑은 추가 감속)</div>
+<div class="setting-title text-yellow-400">🕹️ 조작 방식</div>
 <div class="radio-container">
 <label><input type="radio" name="control" value="touch" checked><div class="radio-label">터치(5레인)</div></label>
 <label><input type="radio" name="control" value="typing"><div class="radio-label">타이핑입력</div></label>
@@ -129,18 +118,18 @@ backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 </div>
 
 <div class="setting-group">
-<div class="setting-title text-blue-400">⚡ 낙하 템포 (5단계)</div>
+<div class="setting-title text-blue-400">⚡ 낙하 템포</div>
 <div class="radio-container">
-<label><input type="radio" name="speed" value="0.4"><div class="radio-label">아주 느림</div></label>
+<label><input type="radio" name="speed" value="0.4"><div class="radio-label">아주느림</div></label>
 <label><input type="radio" name="speed" value="0.55"><div class="radio-label">느림</div></label>
 <label><input type="radio" name="speed" value="0.7" checked><div class="radio-label">보통</div></label>
 <label><input type="radio" name="speed" value="0.9"><div class="radio-label">빠름</div></label>
-<label><input type="radio" name="speed" value="1.2"><div class="radio-label">매우 빠름</div></label>
+<label><input type="radio" name="speed" value="1.2"><div class="radio-label">매우빠름</div></label>
 </div>
 </div>
 
 <div class="setting-group">
-<div class="setting-title text-red-400">🔥 실전 모드 (힌트 유무)</div>
+<div class="setting-title text-red-400">🔥 실전 모드</div>
 <div class="radio-container">
 <label><input type="radio" name="difficulty" value="practice" checked><div class="radio-label">연습(힌트O)</div></label>
 <label><input type="radio" name="difficulty" value="real"><div class="radio-label">실전(힌트X)</div></label>
@@ -148,11 +137,11 @@ backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 </div>
 
 <div class="setting-group">
-<div class="setting-title text-green-400" style="margin-bottom:2px;">🎧 BGM 파일 불러오기 (선택)</div>
+<div class="setting-title text-green-400" style="margin-bottom:2px;">🎧 BGM 파일 불러오기</div>
 <input type="file" id="bgm-upload" accept="audio/*" class="w-full text-[10px] text-gray-300">
 </div>
 
-<button class="btn btn-outline mt-2 mb-8" onclick="showScreen('screen-main')">메인으로</button>
+<button class="btn btn-outline mt-1 mb-6" onclick="showScreen('screen-main')">메인으로</button>
 </div>
 
 <div id="screen-result" class="screen screen-center hidden">
@@ -189,7 +178,7 @@ backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 <canvas id="canvas"></canvas>
 
 <script>
-// data.js에서 불러온 window.BIBLE을 게임에서 사용하는 bibleData로 변환
+// data.js의 window.BIBLE 데이터를 bibleData로 안전하게 변환
 const bibleData = {};
 if (window.BIBLE) {
   for (let ch in window.BIBLE) {
@@ -218,18 +207,20 @@ function changeQuarter() {
 
   trackDefs = [];
   for (let ch = startCh; ch <= endCh; ch++) {
-    if (!bibleData[ch]) continue;
-    let totalVerses = bibleData[ch].length;
+    let chKey = String(ch);
+    // 문자열 키값으로 안전하게 조회
+    if (!bibleData[chKey]) continue;
+    let totalVerses = bibleData[chKey].length;
 
     if (totalVerses >= 12) {
       let mid = Math.floor(totalVerses / 2);
-      trackDefs.push({ id: `t${ch}_1`, ch: ch, start: 1, end: mid, title: `계 ${ch}장 파트1 (1~${mid}절)`, speed: 1.0, isSpeedrun: false });
-      trackDefs.push({ id: `t${ch}_2`, ch: ch, start: mid + 1, end: totalVerses, title: `계 ${ch}장 파트2 (${mid+1}~${totalVerses}절)`, speed: 1.0, isSpeedrun: false });
+      trackDefs.push({ id: `t${ch}_1`, ch: chKey, start: 1, end: mid, title: `계 ${ch}장 파트1 (1~${mid}절)`, speed: 1.0, isSpeedrun: false });
+      trackDefs.push({ id: `t${ch}_2`, ch: chKey, start: mid + 1, end: totalVerses, title: `계 ${ch}장 파트2 (${mid+1}~${totalVerses}절)`, speed: 1.0, isSpeedrun: false });
     } else {
-      trackDefs.push({ id: `t${ch}_f`, ch: ch, start: 1, end: totalVerses, title: `계 ${ch}장 전체 (1~${totalVerses}절)`, speed: 1.0, isSpeedrun: false });
+      trackDefs.push({ id: `t${ch}_f`, ch: chKey, start: 1, end: totalVerses, title: `계 ${ch}장 전체 (1~${totalVerses}절)`, speed: 1.0, isSpeedrun: false });
     }
 
-    trackDefs.push({ id: `t${ch}_speed`, ch: ch, start: 1, end: totalVerses, title: `계 ${ch}장 ⚡스피드런`, speed: 1.3, isSpeedrun: true });
+    trackDefs.push({ id: `t${ch}_speed`, ch: chKey, start: 1, end: totalVerses, title: `계 ${ch}장 ⚡스피드런`, speed: 1.3, isSpeedrun: true });
   }
 
   renderTrackList();
