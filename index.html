@@ -1,264 +1,262 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>비트 & 슬라이스: 실전 암송 마스터</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 💡 data.js 파일을 불러옵니다 -->
-    <script src="data.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&display=swap');
-        body { margin: 0; background-color: #020617; font-family: 'Noto Serif KR', serif; color: white; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
-        canvas { display: block; width: 100vw; height: 100vh; }
-        .hidden { display: none !important; }
-        
-        .screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: rgba(2, 6, 23, 0.95); z-index: 100; overflow-y: auto; padding: 30px 15px; }
-        .screen-center { justify-content: center; }
-        
-        .title { font-size: 2.2rem; font-weight: 900; color: #fbbf24; margin-bottom: 1rem; text-align: center; text-shadow: 0 0 15px #fbbf24; line-height: 1.2;}
-        .btn { padding: 12px 20px; margin: 6px; width: 100%; max-width: 300px; background: linear-gradient(to bottom, #fbbf24, #f59e0b); color: black; font-size: 1.1rem; font-weight: 900; border-radius: 10px; text-align: center; cursor: pointer; border: none; box-shadow: 0 4px 10px rgba(245,158,11,0.3); transition: transform 0.1s;}
-        .btn:active { transform: scale(0.95); }
-        .btn-outline { background: transparent; border: 2px solid #64748b; color: white; box-shadow: none; }
-        
-        .track-list { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
-        .track-item { background: rgba(30, 41, 59, 0.9); border: 2px solid #475569; border-radius: 10px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; position: relative; overflow: hidden;}
-        .track-item:hover { border-color: #3b82f6; }
-        .track-title { font-size: 1rem; font-weight: 900; color: #60a5fa; margin-bottom: 2px; }
-        .track-desc { font-size: 0.75rem; color: #94a3b8; }
-        .track-score { font-size: 0.75rem; color: #fbbf24; margin-top: 2px; font-weight: bold; }
-        .badge-clear { position: absolute; top: -8px; right: -20px; background: #4ade80; color: black; font-weight: 900; font-size: 0.7rem; padding: 12px 20px 4px 20px; transform: rotate(45deg); box-shadow: 0 2px 5px rgba(0,0,0,0.5);}
-        .speedrun-bg { background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(127, 29, 29, 0.6)); border-color: #7f1d1d; }
-        .speedrun-bg .track-title { color: #f87171; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>비트 & 슬라이스: 실전 암송 마스터</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- 💡 data.js 파일을 불러옵니다 -->
+<script src="data.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&display=swap');
+body { margin: 0; background-color: #020617; font-family: 'Noto Serif KR', serif; color: white; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
+canvas { display: block; width: 100vw; height: 100vh; }
+.hidden { display: none !important; }
 
-        .setting-group { background: rgba(30, 41, 59, 0.8); border: 1px solid #475569; border-radius: 10px; padding: 12px; margin-bottom: 10px; width: 100%; max-width: 400px; text-align: left; }
-        .setting-title { font-size: 0.85rem; font-weight: bold; margin-bottom: 6px; }
-        
-        .radio-container { display: flex; gap: 3px; width: 100%; }
-        .radio-label { flex: 1; text-align: center; padding: 8px 0; background: #1e293b; border: 1px solid #475569; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: bold; white-space: nowrap; letter-spacing: -0.5px;}
-        
-        input[type="radio"]:checked + .radio-label { background: #3b82f6; border-color: #60a5fa; color: white; }
-        input[type="radio"] { display: none; }
-        
-        #game-ui { position: absolute; top: 0; left: 0; width: 100%; padding: 5px; box-sizing: border-box; pointer-events: none; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .top-bar-compact { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 800px; }
-        .info-pill { background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
-        
-        #ui-big-verse-id { font-size: 1rem; font-weight: 900; color: #fbbf24; text-shadow: 1px 1px 2px black; margin-bottom: 2px; }
-        
-        #verse-display { 
-            background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; 
-            padding: 12px 15px; font-size: 0.9rem; text-align: center; 
-            word-break: keep-all; word-wrap: break-word; 
-            width: 95%; max-width: 600px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5); line-height: 1.5; 
-            backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
-        }
-        
-        .word-done { color: #fbbf24; text-shadow: 1px 1px 2px black; }
-        .word-target { color: white; border-bottom: 2px solid #ef4444; background: rgba(239, 68, 68, 0.4); padding: 0 3px; border-radius: 3px; text-shadow: 1px 1px 2px black; font-weight: bold;}
-        .word-future { color: #cbd5e1; text-shadow: 1px 1px 2px black; }
-        
-        #typing-container { position: fixed; bottom: max(10px, env(safe-area-inset-bottom)); left: 0; width: 100%; display: flex; justify-content: center; z-index: 20; padding: 0 10px; box-sizing: border-box;}
-        #typing-input { width: 100%; max-width: 400px; background: rgba(15, 23, 42, 0.9); border: 2px solid #fbbf24; color: white; font-size: 1.1rem; font-weight: 900; text-align: center; padding: 10px; border-radius: 10px; box-shadow: 0 -5px 20px rgba(0,0,0,0.8); outline: none; font-family: 'Noto Serif KR', serif; }
-        #typing-input:focus { border-color: #4ade80; }
+.screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: rgba(2, 6, 23, 0.95); z-index: 100; overflow-y: auto; padding: 30px 15px; }
+.screen-center { justify-content: center; }
 
-        #damage-overlay { position: absolute; inset: 0; background: red; opacity: 0; z-index: 50; pointer-events: none; transition: opacity 0.2s;}
-        
-        .guide-li { margin-bottom: 12px; line-height: 1.5; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;}
-        .guide-li:last-child { border-bottom: none; }
+.title { font-size: 2.2rem; font-weight: 900; color: #fbbf24; margin-bottom: 1rem; text-align: center; text-shadow: 0 0 15px #fbbf24; line-height: 1.2;}
+.btn { padding: 12px 20px; margin: 6px; width: 100%; max-width: 300px; background: linear-gradient(to bottom, #fbbf24, #f59e0b); color: black; font-size: 1.1rem; font-weight: 900; border-radius: 10px; text-align: center; cursor: pointer; border: none; box-shadow: 0 4px 10px rgba(245,158,11,0.3); transition: transform 0.1s;}
+.btn:active { transform: scale(0.95); }
+.btn-outline { background: transparent; border: 2px solid #64748b; color: white; box-shadow: none; }
 
-        /* 스크롤바 디자인 */
-        .track-list::-webkit-scrollbar { width: 6px; }
-        .track-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
-        .track-list::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-    </style>
+.track-list { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
+.track-item { background: rgba(30, 41, 59, 0.9); border: 2px solid #475569; border-radius: 10px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; position: relative; overflow: hidden;}
+.track-item:hover { border-color: #3b82f6; }
+.track-title { font-size: 1rem; font-weight: 900; color: #60a5fa; margin-bottom: 2px; }
+.track-desc { font-size: 0.75rem; color: #94a3b8; }
+.track-score { font-size: 0.75rem; color: #fbbf24; margin-top: 2px; font-weight: bold; }
+.badge-clear { position: absolute; top: -8px; right: -20px; background: #4ade80; color: black; font-weight: 900; font-size: 0.7rem; padding: 12px 20px 4px 20px; transform: rotate(45deg); box-shadow: 0 2px 5px rgba(0,0,0,0.5);}
+.speedrun-bg { background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(127, 29, 29, 0.6)); border-color: #7f1d1d; }
+.speedrun-bg .track-title { color: #f87171; }
+
+.setting-group { background: rgba(30, 41, 59, 0.8); border: 1px solid #475569; border-radius: 10px; padding: 12px; margin-bottom: 10px; width: 100%; max-width: 400px; text-align: left; }
+.setting-title { font-size: 0.85rem; font-weight: bold; margin-bottom: 6px; }
+
+.radio-container { display: flex; gap: 3px; width: 100%; }
+.radio-label { flex: 1; text-align: center; padding: 8px 0; background: #1e293b; border: 1px solid #475569; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: bold; white-space: nowrap; letter-spacing: -0.5px;}
+
+input[type="radio"]:checked + .radio-label { background: #3b82f6; border-color: #60a5fa; color: white; }
+input[type="radio"] { display: none; }
+
+#game-ui { position: absolute; top: 0; left: 0; width: 100%; padding: 5px; box-sizing: border-box; pointer-events: none; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.top-bar-compact { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 800px; }
+.info-pill { background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
+
+#ui-big-verse-id { font-size: 1rem; font-weight: 900; color: #fbbf24; text-shadow: 1px 1px 2px black; margin-bottom: 2px; }
+
+#verse-display {
+background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px;
+padding: 12px 15px; font-size: 0.9rem; text-align: center;
+word-break: keep-all; word-wrap: break-word;
+width: 95%; max-width: 600px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.5); line-height: 1.5;
+backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+}
+
+.word-done { color: #fbbf24; text-shadow: 1px 1px 2px black; }
+.word-target { color: white; border-bottom: 2px solid #ef4444; background: rgba(239, 68, 68, 0.4); padding: 0 3px; border-radius: 3px; text-shadow: 1px 1px 2px black; font-weight: bold;}
+.word-future { color: #cbd5e1; text-shadow: 1px 1px 2px black; }
+
+#typing-container { position: fixed; bottom: max(10px, env(safe-area-inset-bottom)); left: 0; width: 100%; display: flex; justify-content: center; z-index: 20; padding: 0 10px; box-sizing: border-box;}
+#typing-input { width: 100%; max-width: 400px; background: rgba(15, 23, 42, 0.9); border: 2px solid #fbbf24; color: white; font-size: 1.1rem; font-weight: 900; text-align: center; padding: 10px; border-radius: 10px; box-shadow: 0 -5px 20px rgba(0,0,0,0.8); outline: none; font-family: 'Noto Serif KR', serif; }
+#typing-input:focus { border-color: #4ade80; }
+
+#damage-overlay { position: absolute; inset: 0; background: red; opacity: 0; z-index: 50; pointer-events: none; transition: opacity 0.2s;}
+
+.guide-li { margin-bottom: 12px; line-height: 1.5; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;}
+.guide-li:last-child { border-bottom: none; }
+
+/* 스크롤바 디자인 */
+.track-list::-webkit-scrollbar { width: 6px; }
+.track-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+.track-list::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+</style>
 </head>
 <body>
 
-    <div id="screen-main" class="screen screen-center">
-        <div class="title">비트 & 슬라이스<br><span style="font-size:1.2rem; color:white; text-shadow: none;">계시록 전술 암송기</span></div>
-        <button class="btn" onclick="initSysAudio(); showScreen('screen-setup')">게임 시작</button>
-        <button class="btn btn-outline" onclick="showScreen('screen-guide')">상세 가이드 보기</button>
-    </div>
+<div id="screen-main" class="screen screen-center">
+<div class="title">비트 & 슬라이스<br><span style="font-size:1.2rem; color:white; text-shadow: none;">계시록 전술 암송기</span></div>
+<button class="btn" onclick="initSysAudio(); showScreen('screen-setup')">트랙 선택 / 시작</button>
+<button class="btn btn-outline" onclick="showScreen('screen-guide')">상세 가이드 보기</button>
+</div>
 
-    <div id="screen-guide" class="screen">
-        <h2 class="text-2xl font-black text-yellow-400 mb-4 mt-4">📖 상세 플레이 가이드</h2>
-        
-        <div class="setting-group text-xs" style="max-width: 100%;">
-            <div class="text-lg font-bold text-white mb-2 border-b border-gray-600 pb-1">⚡ 게임 핵심 룰</div>
-            <div class="guide-li"><span class="text-emerald-400 font-bold">보이면 바로 치세요!</span><br>아래 노란선까지 기다릴 필요 없습니다. 정답이 보이면 바로 누르거나 타이핑하세요!</div>
-            <div class="guide-li"><span class="text-red-400 font-bold">오답 터치는 독입니다.</span><br>가짜 단어(오답)를 치면 점수 없이 <b>'실수'</b>로 처리됩니다. 정답만 저격하세요!</div>
-            <div class="guide-li"><span class="text-blue-400 font-bold">순서 엄수 (따닥 콤보)</span><br>정답이 2개 내려올 땐 <b>아래에 있는 먼저 나온 정답</b>부터 쳐야 합니다.</div>
-            <div class="guide-li"><span class="text-purple-400 font-bold">생명력(❤️) 감소 조건</span><br>정답을 놓치거나, 오답을 잘못 치면 실수 스택이 쌓이며, <b>2번 실수마다</b> 하트가 깎입니다.</div>
-        </div>
+<div id="screen-guide" class="screen hidden">
+<h2 class="text-2xl font-black text-yellow-400 mb-4 mt-4">📖 상세 플레이 가이드</h2>
 
-        <div class="setting-group text-xs" style="max-width: 100%;">
-            <div class="text-lg font-bold text-white mb-2 border-b border-gray-600 pb-1">⚙️ 버튼/옵션 설명</div>
-            <div class="guide-li"><b>[조작: 터치(5레인)]</b>: 노트를 터치하거나, 키보드 <b>1~5</b> (A,S,D,K,L)를 눌러 타격.</div>
-            <div class="guide-li"><b>[조작: 타이핑]</b>: 정답을 키보드로 치세요 (띄어쓰기 무시). 타이핑 모드는 자동으로 0.5배속 보정됩니다!</div>
-            <div class="guide-li"><b>[속도 조절 (5단계)]</b>: 초보자를 위한 '아주 느림'부터 고인물용 '매우 빠름'까지 제공.</div>
-            <div class="guide-li"><b>[실전 모드]</b>: 힌트(테두리 색깔)가 사라지고 올 화이트로 승부합니다.</div>
-        </div>
+<div class="setting-group text-xs" style="max-width: 100%;">
+<div class="text-lg font-bold text-white mb-2 border-b border-gray-600 pb-1">⚡ 게임 핵심 룰</div>
+<div class="guide-li"><span class="text-emerald-400 font-bold">보이면 바로 치세요!</span><br>아래 노란선까지 기다릴 필요 없습니다. 정답이 보이면 바로 누르거나 타이핑하세요!</div>
+<div class="guide-li"><span class="text-red-400 font-bold">오답 터치는 독입니다.</span><br>가짜 단어(오답)를 치면 점수 없이 <b>'실수'</b>로 처리됩니다. 정답만 저격하세요!</div>
+<div class="guide-li"><span class="text-blue-400 font-bold">순서 엄수 (따닥 콤보)</span><br>정답이 2개 내려올 땐 <b>아래에 있는 먼저 나온 정답</b>부터 쳐야 합니다.</div>
+<div class="guide-li"><span class="text-purple-400 font-bold">생명력(❤️) 감소 조건</span><br>정답을 놓치거나, 오답을 잘못 치면 실수 스택이 쌓이며, <b>2번 실수마다</b> 하트가 깎입니다.</div>
+</div>
 
-        <button class="btn btn-outline mb-8" onclick="showScreen('screen-main')">메인으로 돌아가기</button>
-    </div>
+<div class="setting-group text-xs" style="max-width: 100%;">
+<div class="text-lg font-bold text-white mb-2 border-b border-gray-600 pb-1">⚙️ 버튼/옵션 설명</div>
+<div class="guide-li"><b>[조작: 터치(5레인)]</b>: 노트를 터치하거나, 키보드 <b>1~5</b> (A,S,D,K,L)를 눌러 타격.</div>
+<div class="guide-li"><b>[조작: 타이핑]</b>: 정답을 키보드로 치세요 (띄어쓰기 무시). 타이핑 모드는 자동으로 0.5배속 보정됩니다!</div>
+<div class="guide-li"><b>[속도 조절 (5단계)]</b>: 초보자를 위한 '아주 느림'부터 고인물용 '매우 빠름'까지 제공.</div>
+<div class="guide-li"><b>[실전 모드]</b>: 힌트(테두리 색깔)가 사라지고 올 화이트로 승부합니다.</div>
+</div>
 
-    <div id="screen-setup" class="screen hidden">
-        <h2 class="text-xl font-black mb-3 text-white">트랙 선택</h2>
-        
-        <!-- 💡 분기 선택 라디오 버튼 추가 -->
-        <div class="setting-group">
-            <div class="setting-title text-emerald-400">📅 범위 (분기) 선택</div>
-            <div class="radio-container">
-                <label><input type="radio" name="quarter" value="1" onchange="changeQuarter()" checked><div class="radio-label">1분기(1~6장)</div></label>
-                <label><input type="radio" name="quarter" value="2" onchange="changeQuarter()"><div class="radio-label">2분기(7~12장)</div></label>
-                <label><input type="radio" name="quarter" value="3" onchange="changeQuarter()"><div class="radio-label">3분기(13~17장)</div></label>
-                <label><input type="radio" name="quarter" value="4" onchange="changeQuarter()"><div class="radio-label">4분기(18~22장)</div></label>
-            </div>
-        </div>
+<button class="btn btn-outline mb-8" onclick="showScreen('screen-main')">메인으로 돌아가기</button>
+</div>
 
-        <div id="track-list-container" class="track-list"></div>
+<div id="screen-setup" class="screen hidden">
+<h2 class="text-xl font-black mb-3 text-white">트랙 선택 (클릭 시 바로 시작)</h2>
 
-        <div class="setting-group">
-            <div class="setting-title text-yellow-400">🕹️ 조작 방식 (타이핑은 추가 감속)</div>
-            <div class="radio-container">
-                <label><input type="radio" name="control" value="touch" checked><div class="radio-label">터치(5레인)</div></label>
-                <label><input type="radio" name="control" value="typing"><div class="radio-label">타이핑입력</div></label>
-            </div>
-        </div>
+<!-- 범위 선택 라디오 버튼 -->
+<div class="setting-group">
+<div class="setting-title text-emerald-400">📅 범위 (분기) 선택</div>
+<div class="radio-container">
+<label><input type="radio" name="quarter" value="1" onchange="changeQuarter()" checked><div class="radio-label">1분기(1~6장)</div></label>
+<label><input type="radio" name="quarter" value="2" onchange="changeQuarter()"><div class="radio-label">2분기(7~12장)</div></label>
+<label><input type="radio" name="quarter" value="3" onchange="changeQuarter()"><div class="radio-label">3분기(13~17장)</div></label>
+<label><input type="radio" name="quarter" value="4" onchange="changeQuarter()"><div class="radio-label">4분기(18~22장)</div></label>
+</div>
+</div>
 
-        <div class="setting-group">
-            <div class="setting-title text-blue-400">⚡ 낙하 템포 (5단계)</div>
-            <div class="radio-container">
-                <label><input type="radio" name="speed" value="0.4"><div class="radio-label">아주 느림</div></label>
-                <label><input type="radio" name="speed" value="0.55"><div class="radio-label">느림</div></label>
-                <label><input type="radio" name="speed" value="0.7" checked><div class="radio-label">보통</div></label>
-                <label><input type="radio" name="speed" value="0.9"><div class="radio-label">빠름</div></label>
-                <label><input type="radio" name="speed" value="1.2"><div class="radio-label">매우 빠름</div></label>
-            </div>
-        </div>
+<div id="track-list-container" class="track-list"></div>
 
-        <div class="setting-group">
-            <div class="setting-title text-red-400">🔥 실전 모드 (힌트 유무)</div>
-            <div class="radio-container">
-                <label><input type="radio" name="difficulty" value="practice" checked><div class="radio-label">연습(힌트O)</div></label>
-                <label><input type="radio" name="difficulty" value="real"><div class="radio-label">실전(힌트X)</div></label>
-            </div>
-        </div>
-        
-        <div class="setting-group">
-            <div class="setting-title text-green-400" style="margin-bottom:2px;">🎧 BGM 파일 불러오기 (선택)</div>
-            <input type="file" id="bgm-upload" accept="audio/*" class="w-full text-[10px] text-gray-300">
-        </div>
-        
-        <button class="btn btn-outline mt-2 mb-8" onclick="showScreen('screen-main')">메인으로</button>
-    </div>
+<div class="setting-group">
+<div class="setting-title text-yellow-400">🕹️ 조작 방식 (타이핑은 추가 감속)</div>
+<div class="radio-container">
+<label><input type="radio" name="control" value="touch" checked><div class="radio-label">터치(5레인)</div></label>
+<label><input type="radio" name="control" value="typing"><div class="radio-label">타이핑입력</div></label>
+</div>
+</div>
 
-    <div id="screen-result" class="screen screen-center hidden">
-        <div id="result-title" class="title" style="font-size: 3rem;">성공!</div>
-        <div id="result-msg" class="text-sm text-gray-300 mb-4"></div>
-        <div class="setting-group text-center">
-            <div class="text-xl font-black text-yellow-400 mb-1">SCORE: <span id="result-score">0</span></div>
-            <div id="result-highscore-msg" class="text-xs text-emerald-400 font-bold hidden">🎉 신기록 달성! 🎉</div>
-        </div>
-        <button class="btn mt-4" onclick="showScreen('screen-setup')">트랙 선택으로</button>
-    </div>
+<div class="setting-group">
+<div class="setting-title text-blue-400">⚡ 낙하 템포 (5단계)</div>
+<div class="radio-container">
+<label><input type="radio" name="speed" value="0.4"><div class="radio-label">아주 느림</div></label>
+<label><input type="radio" name="speed" value="0.55"><div class="radio-label">느림</div></label>
+<label><input type="radio" name="speed" value="0.7" checked><div class="radio-label">보통</div></label>
+<label><input type="radio" name="speed" value="0.9"><div class="radio-label">빠름</div></label>
+<label><input type="radio" name="speed" value="1.2"><div class="radio-label">매우 빠름</div></label>
+</div>
+</div>
 
-    <div id="damage-overlay"></div>
+<div class="setting-group">
+<div class="setting-title text-red-400">🔥 실전 모드 (힌트 유무)</div>
+<div class="radio-container">
+<label><input type="radio" name="difficulty" value="practice" checked><div class="radio-label">연습(힌트O)</div></label>
+<label><input type="radio" name="difficulty" value="real"><div class="radio-label">실전(힌트X)</div></label>
+</div>
+</div>
 
-    <div id="game-ui" class="hidden">
-        <div class="top-bar-compact">
-            <div class="info-pill">
-                <span id="ui-score" class="text-sm font-black text-yellow-400">0</span>
-                <span class="text-gray-500 text-[10px]">|</span>
-                <span id="ui-hit" class="text-xs font-bold text-emerald-400">0 CB</span>
-            </div>
-            <div id="ui-big-verse-id">계 ?장 ?절</div>
-            <div class="info-pill">
-                <span id="ui-lives" class="text-xs tracking-widest">❤️❤️❤️</span>
-            </div>
-        </div>
-        <div id="verse-display"></div>
-    </div>
+<div class="setting-group">
+<div class="setting-title text-green-400" style="margin-bottom:2px;">🎧 BGM 파일 불러오기 (선택)</div>
+<input type="file" id="bgm-upload" accept="audio/*" class="w-full text-[10px] text-gray-300">
+</div>
 
-    <div id="typing-container" class="hidden">
-        <input type="text" id="typing-input" placeholder="정답을 입력하세요 (띄어쓰기 무시)" autocomplete="off" spellcheck="false">
-    </div>
+<button class="btn btn-outline mt-2 mb-8" onclick="showScreen('screen-main')">메인으로</button>
+</div>
 
-    <canvas id="canvas"></canvas>
+<div id="screen-result" class="screen screen-center hidden">
+<div id="result-title" class="title" style="font-size: 3rem;">성공!</div>
+<div id="result-msg" class="text-sm text-gray-300 mb-4"></div>
+<div class="setting-group text-center">
+<div class="text-xl font-black text-yellow-400 mb-1">SCORE: <span id="result-score">0</span></div>
+<div id="result-highscore-msg" class="text-xs text-emerald-400 font-bold hidden">🎉 신기록 달성! 🎉</div>
+</div>
+<button class="btn mt-4" onclick="showScreen('screen-setup')">트랙 선택으로</button>
+</div>
+
+<div id="damage-overlay"></div>
+
+<div id="game-ui" class="hidden">
+<div class="top-bar-compact">
+<div class="info-pill">
+<span id="ui-score" class="text-sm font-black text-yellow-400">0</span>
+<span class="text-gray-500 text-[10px]">|</span>
+<span id="ui-hit" class="text-xs font-bold text-emerald-400">0 CB</span>
+</div>
+<div id="ui-big-verse-id">계 ?장 ?절</div>
+<div class="info-pill">
+<span id="ui-lives" class="text-xs tracking-widest">❤️❤️❤️</span>
+</div>
+</div>
+<div id="verse-display"></div>
+</div>
+
+<div id="typing-container" class="hidden">
+<input type="text" id="typing-input" placeholder="정답을 입력하세요 (띄어쓰기 무시)" autocomplete="off" spellcheck="false">
+</div>
+
+<canvas id="canvas"></canvas>
 
 <script>
-// 💡 data.js에서 불러온 window.BIBLE을 게임에서 사용하는 bibleData로 변환
+// data.js에서 불러온 window.BIBLE을 게임에서 사용하는 bibleData로 변환
 const bibleData = {};
 if (window.BIBLE) {
-    for (let ch in window.BIBLE) {
-        bibleData[ch] = [];
-        for (let v in window.BIBLE[ch]) {
-            bibleData[ch].push({ 
-                v: parseInt(v), 
-                t: window.BIBLE[ch][v], 
-                c: parseInt(ch) 
-            });
-        }
+  for (let ch in window.BIBLE) {
+    bibleData[ch] = [];
+    for (let v in window.BIBLE[ch]) {
+      bibleData[ch].push({
+        v: parseInt(v),
+        t: window.BIBLE[ch][v],
+        c: parseInt(ch)
+      });
     }
+  }
 } else {
-    alert("data.js 파일을 찾을 수 없거나 데이터가 올바르지 않습니다. 기존 데이터 또는 빈 데이터로 실행될 수 있습니다.");
+  alert("data.js 파일을 찾을 수 없거나 데이터가 올바르지 않습니다.");
 }
 
 let trackDefs = [];
 
-// 💡 분기를 선택할 때 호출되는 함수
 function changeQuarter() {
-    const q = parseInt(document.querySelector('input[name="quarter"]:checked').value);
-    
-    let startCh = 1, endCh = 6;
-    if (q === 2) { startCh = 7; endCh = 12; }
-    else if (q === 3) { startCh = 13; endCh = 17; }
-    else if (q === 4) { startCh = 18; endCh = 22; }
+  const q = parseInt(document.querySelector('input[name="quarter"]:checked').value);
 
-    trackDefs = [];
-    for (let ch = startCh; ch <= endCh; ch++) {
-        if (!bibleData[ch]) continue;
-        let totalVerses = bibleData[ch].length;
-        
-        // 절이 많을 경우 파트 1, 2로 나눕니다.
-        if (totalVerses >= 12) {
-            let mid = Math.floor(totalVerses / 2);
-            trackDefs.push({ id: `t${ch}_1`, ch: ch, start: 1, end: mid, title: `계 ${ch}장 파트1 (1~${mid}절)`, speed: 1.0, isSpeedrun: false });
-            trackDefs.push({ id: `t${ch}_2`, ch: ch, start: mid + 1, end: totalVerses, title: `계 ${ch}장 파트2 (${mid+1}~${totalVerses}절)`, speed: 1.0, isSpeedrun: false });
-        } else {
-            trackDefs.push({ id: `t${ch}_f`, ch: ch, start: 1, end: totalVerses, title: `계 ${ch}장 전체 (1~${totalVerses}절)`, speed: 1.0, isSpeedrun: false });
-        }
-        
-        // 스피드런 모드는 무조건 챕터당 1개씩 추가
-        trackDefs.push({ id: `t${ch}_speed`, ch: ch, start: 1, end: totalVerses, title: `계 ${ch}장 ⚡스피드런`, speed: 1.3, isSpeedrun: true });
+  let startCh = 1, endCh = 6;
+  if (q === 2) { startCh = 7; endCh = 12; }
+  else if (q === 3) { startCh = 13; endCh = 17; }
+  else if (q === 4) { startCh = 18; endCh = 22; }
+
+  trackDefs = [];
+  for (let ch = startCh; ch <= endCh; ch++) {
+    if (!bibleData[ch]) continue;
+    let totalVerses = bibleData[ch].length;
+
+    if (totalVerses >= 12) {
+      let mid = Math.floor(totalVerses / 2);
+      trackDefs.push({ id: `t${ch}_1`, ch: ch, start: 1, end: mid, title: `계 ${ch}장 파트1 (1~${mid}절)`, speed: 1.0, isSpeedrun: false });
+      trackDefs.push({ id: `t${ch}_2`, ch: ch, start: mid + 1, end: totalVerses, title: `계 ${ch}장 파트2 (${mid+1}~${totalVerses}절)`, speed: 1.0, isSpeedrun: false });
+    } else {
+      trackDefs.push({ id: `t${ch}_f`, ch: ch, start: 1, end: totalVerses, title: `계 ${ch}장 전체 (1~${totalVerses}절)`, speed: 1.0, isSpeedrun: false });
     }
-    
-    renderTrackList();
+
+    trackDefs.push({ id: `t${ch}_speed`, ch: ch, start: 1, end: totalVerses, title: `계 ${ch}장 ⚡스피드런`, speed: 1.3, isSpeedrun: true });
+  }
+
+  renderTrackList();
 }
 
 let audioCtx;
 function initSysAudio() {
-    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if(audioCtx.state === 'suspended') audioCtx.resume();
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
 }
+
 function playSound(type) {
-    if(!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    if(type === 'hit') {
-        osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-    } else if(type === 'damage') {
-        osc.type = 'square'; osc.frequency.setValueAtTime(100, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-    }
+  if(!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  if(type === 'hit') {
+    osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+  } else if(type === 'damage') {
+    osc.type = 'square'; osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+  }
 }
 
 const canvas = document.getElementById('canvas');
@@ -267,7 +265,7 @@ let cw, ch, isPlaying = false, isRealMode = false, controlMode = 'touch';
 let speedMultiplier = 1.0;
 let selectedTrackDef = null;
 let currentVerseList = [], verseProgressIdx = 0, currentWords = [], wordIdx = 0;
-let decoyChunks = []; 
+let decoyChunks = [];
 let notes = [], particles = [], score = 0, combo = 0, lives = 3, mistakeCount = 0;
 let bgm = new Audio(), lastTime = 0;
 const LANES = 5, BASE_NOTE_SPEED = 240;
@@ -280,331 +278,330 @@ const typingContainer = document.getElementById('typing-container');
 document.getElementById('bgm-upload').onchange = (e) => { if(e.target.files[0]) bgm.src = URL.createObjectURL(e.target.files[0]); };
 
 function renderTrackList() {
-    const container = document.getElementById('track-list-container');
-    container.innerHTML = '';
-    trackDefs.forEach(td => {
-        let savedScore = localStorage.getItem('rev_score_' + td.id) || 0;
-        let isCleared = localStorage.getItem('rev_clear_' + td.id) === 'true';
-        let div = document.createElement('div');
-        div.className = `track-item ${td.isSpeedrun ? 'speedrun-bg' : ''}`;
-        div.onclick = () => launchGame(td);
-        let clearBadge = isCleared ? `<div class="badge-clear">CLEAR</div>` : '';
-        div.innerHTML = `
-            ${clearBadge}
-            <div class="track-title">${td.title}</div>
-            <div class="track-score">최고 기록: ${savedScore}</div>
-        `;
-        container.appendChild(div);
-    });
+  const container = document.getElementById('track-list-container');
+  container.innerHTML = '';
+  trackDefs.forEach(td => {
+    let savedScore = localStorage.getItem('rev_score_' + td.id) || 0;
+    let isCleared = localStorage.getItem('rev_clear_' + td.id) === 'true';
+    let div = document.createElement('div');
+    div.className = `track-item ${td.isSpeedrun ? 'speedrun-bg' : ''}`;
+    div.onclick = () => {
+      initSysAudio();
+      launchGame(td);
+    };
+    let clearBadge = isCleared ? '<div class="badge-clear">CLEAR</div>' : '';
+    div.innerHTML = `${clearBadge}<div class="track-title">${td.title}</div><div class="track-score">최고 기록: ${savedScore}</div>`;
+    container.appendChild(div);
+  });
 }
 
-function showScreen(id) { 
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); 
-    document.getElementById(id).classList.remove('hidden'); 
-    if(id === 'screen-setup') changeQuarter(); // 💡 셋업 스크린 진입시 분기 및 트랙 렌더링
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  if(id === 'screen-setup') changeQuarter();
 }
 
 function launchGame(trackDef) {
-    selectedTrackDef = trackDef;
-    isRealMode = document.querySelector('input[name="difficulty"]:checked').value === 'real';
-    controlMode = document.querySelector('input[name="control"]:checked').value;
-    speedMultiplier = parseFloat(document.querySelector('input[name="speed"]:checked').value);
-    
-    currentVerseList = bibleData[trackDef.ch].filter(v => v.v >= trackDef.start && v.v <= trackDef.end);
-    
-    decoyChunks = [];
-    bibleData[trackDef.ch].forEach(v => {
-        let raw = v.t.split(" "); let temp = "";
-        raw.forEach(w => {
-            if((temp + w).length < 8) temp += (temp?" ":"")+w;
-            else { if(temp) decoyChunks.push(temp); temp = w; }
-        });
-        if(temp) decoyChunks.push(temp);
+  selectedTrackDef = trackDef;
+  isRealMode = document.querySelector('input[name="difficulty"]:checked').value === 'real';
+  controlMode = document.querySelector('input[name="control"]:checked').value;
+  speedMultiplier = parseFloat(document.querySelector('input[name="speed"]:checked').value);
+
+  currentVerseList = bibleData[trackDef.ch].filter(v => v.v >= trackDef.start && v.v <= trackDef.end);
+
+  decoyChunks = [];
+  bibleData[trackDef.ch].forEach(v => {
+    let raw = v.t.split(" "); let temp = "";
+    raw.forEach(w => {
+      if((temp + w).length < 8) temp += (temp?" ":"")+w;
+      else { if(temp) decoyChunks.push(temp); temp = w; }
     });
+    if(temp) decoyChunks.push(temp);
+  });
 
-    isPlaying = true; score = 0; combo = 0; lives = 3; verseProgressIdx = 0; mistakeCount = 0; notes = []; laneFlashes = [0,0,0,0,0];
-    document.getElementById('screen-setup').classList.add('hidden'); 
-    document.getElementById('game-ui').classList.remove('hidden');
-    
-    if(controlMode === 'typing') {
-        typingContainer.classList.remove('hidden');
-        typingInput.value = '';
-        setTimeout(() => typingInput.focus(), 100);
-    } else {
-        typingContainer.classList.add('hidden');
-    }
+  isPlaying = true; score = 0; combo = 0; lives = 3; verseProgressIdx = 0; mistakeCount = 0; notes = []; laneFlashes = [0,0,0,0,0];
+  document.getElementById('screen-setup').classList.add('hidden');
+  document.getElementById('game-ui').classList.remove('hidden');
 
-    if(bgm.src) { bgm.loop = true; bgm.currentTime = 0; bgm.play(); }
-    
-    resize(); lastTime = performance.now(); 
-    loadNextVerse(); 
-    requestAnimationFrame(gameLoop);
+  if(controlMode === 'typing') {
+    typingContainer.classList.remove('hidden');
+    typingInput.value = '';
+    setTimeout(() => typingInput.focus(), 100);
+  } else {
+    typingContainer.classList.add('hidden');
+  }
+
+  if(bgm.src) { bgm.loop = true; bgm.currentTime = 0; bgm.play(); }
+
+  resize(); lastTime = performance.now();
+  loadNextVerse();
+  requestAnimationFrame(gameLoop);
 }
 
 function loadNextVerse() {
-    if(verseProgressIdx >= currentVerseList.length) { endStage(true); return; }
-    const v = currentVerseList[verseProgressIdx++];
-    document.getElementById('ui-big-verse-id').innerText = `계 ${v.c}장 ${v.v}절`;
-    
-    let raw = v.t.split(" "); currentWords = []; let temp = "";
-    raw.forEach(w => { 
-        if((temp + w).length < 8) temp += (temp?" ":"")+w; 
-        else { currentWords.push(temp); temp = w; } 
-    });
-    if(temp) currentWords.push(temp);
-    
-    wordIdx = 0; updateVerseUI(); spawnRow();
+  if(verseProgressIdx >= currentVerseList.length) { endStage(true); return; }
+  const v = currentVerseList[verseProgressIdx++];
+  document.getElementById('ui-big-verse-id').innerText = `계 ${v.c}장 ${v.v}절`;
+
+  let raw = v.t.split(" "); currentWords = []; let temp = "";
+  raw.forEach(w => {
+    if((temp + w).length < 8) temp += (temp?" ":"")+w;
+    else { currentWords.push(temp); temp = w; }
+  });
+  if(temp) currentWords.push(temp);
+
+  wordIdx = 0; updateVerseUI(); spawnRow();
 }
 
 function updateVerseUI() {
-    let html = "";
-    currentWords.forEach((w, i) => {
-        if(i < wordIdx) html += `<span class="word-done">${w} </span>`;
-        else if(i === wordIdx) html += `<span class="word-target">[ ? ] </span>`;
-        else if(!isRealMode) html += `<span class="word-future">${w} </span>`;
-    });
-    document.getElementById('verse-display').innerHTML = html;
+  let html = "";
+  currentWords.forEach((w, i) => {
+    if(i < wordIdx) html += `<span class="word-done">${w} </span>`;
+    else if(i === wordIdx) html += `<span class="word-target">[ ? ] </span>`;
+    else if(!isRealMode) html += `<span class="word-future">${w} </span>`;
+  });
+  document.getElementById('verse-display').innerHTML = html;
 }
 
 function spawnRow() {
-    if(wordIdx >= currentWords.length) return;
-    
-    let targetsToSpawn = [];
-    let availableLanes = [0, 1, 2, 3, 4].sort(() => Math.random() - 0.5);
-    
-    targetsToSpawn.push({ text: currentWords[wordIdx], wIdx: wordIdx, y: -120 });
-    if(wordIdx + 1 < currentWords.length) {
-        targetsToSpawn.push({ text: currentWords[wordIdx+1], wIdx: wordIdx+1, y: -300 }); 
-    }
-    
-    let trackSpeed = BASE_NOTE_SPEED * selectedTrackDef.speed * speedMultiplier;
-    if (controlMode === 'typing') trackSpeed *= 0.5;
-    
-    targetsToSpawn.forEach(t => {
-        notes.push({ lane: availableLanes.pop(), text: t.text, isCorrect: true, wIdx: t.wIdx, y: t.y, speed: trackSpeed, active: true });
-    });
-    
-    while(availableLanes.length > 0) {
-        let decoyText = decoyChunks[Math.floor(Math.random() * decoyChunks.length)];
-        if(!decoyText || decoyText.length === 0 || targetsToSpawn.find(t => t.text === decoyText)) continue;
-        notes.push({ lane: availableLanes.pop(), text: decoyText, isCorrect: false, wIdx: -1, y: -120 - Math.random() * 250, speed: trackSpeed * (0.8 + Math.random() * 0.4), active: true });
-    }
+  if(wordIdx >= currentWords.length) return;
+
+  let targetsToSpawn = [];
+  let availableLanes = [0, 1, 2, 3, 4].sort(() => Math.random() - 0.5);
+
+  targetsToSpawn.push({ text: currentWords[wordIdx], wIdx: wordIdx, y: -120 });
+  if(wordIdx + 1 < currentWords.length) {
+    targetsToSpawn.push({ text: currentWords[wordIdx+1], wIdx: wordIdx+1, y: -300 });
+  }
+
+  let trackSpeed = BASE_NOTE_SPEED * selectedTrackDef.speed * speedMultiplier;
+  if (controlMode === 'typing') trackSpeed *= 0.5;
+
+  targetsToSpawn.forEach(t => {
+    notes.push({ lane: availableLanes.pop(), text: t.text, isCorrect: true, wIdx: t.wIdx, y: t.y, speed: trackSpeed, active: true });
+  });
+
+  while(availableLanes.length > 0) {
+    let decoyText = decoyChunks[Math.floor(Math.random() * decoyChunks.length)];
+    if(!decoyText || decoyText.length === 0 || targetsToSpawn.find(t => t.text === decoyText)) continue;
+    notes.push({ lane: availableLanes.pop(), text: decoyText, isCorrect: false, wIdx: -1, y: -120 - Math.random() * 250, speed: trackSpeed * (0.8 + Math.random() * 0.4), active: true });
+  }
 }
 
 function gameLoop(time) {
-    if(!isPlaying) return;
-    let dt = (time - lastTime) / 1000;
-    if (dt > 0.1) dt = 0.1;
-    lastTime = time;
-    
-    ctx.clearRect(0,0,cw,ch);
-    
-    let intHitLineY = Math.round(hitLineY);
-    
-    for(let i=0; i<LANES; i++) {
-        let lx = Math.round(i*(cw/LANES));
-        let laneW = Math.round(cw/LANES);
-        
-        ctx.strokeStyle = "rgba(255,255,255,0.05)"; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(lx, 0); ctx.lineTo(lx, ch); ctx.stroke();
-        
-        if (laneFlashes[i] > 0) {
-            let grad = ctx.createLinearGradient(0, ch, 0, 0);
-            grad.addColorStop(0, `rgba(251, 191, 36, ${laneFlashes[i]})`);
-            grad.addColorStop(1, `rgba(251, 191, 36, 0)`);
-            ctx.fillStyle = grad; ctx.fillRect(lx, 0, laneW, ch);
-            laneFlashes[i] -= dt * 3;
-            if(laneFlashes[i] < 0) laneFlashes[i] = 0;
-        }
-        if(controlMode === 'touch') {
-            ctx.fillStyle = "rgba(30,41,59,0.5)"; ctx.fillRect(lx, intHitLineY, laneW, ch - intHitLineY);
-        }
+  if(!isPlaying) return;
+  let dt = (time - lastTime) / 1000;
+  if (dt > 0.1) dt = 0.1;
+  lastTime = time;
+
+  ctx.clearRect(0,0,cw,ch);
+
+  let intHitLineY = Math.round(hitLineY);
+
+  for(let i=0; i<LANES; i++) {
+    let lx = Math.round(i*(cw/LANES));
+    let laneW = Math.round(cw/LANES);
+
+    ctx.strokeStyle = "rgba(255,255,255,0.05)"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(lx, 0); ctx.lineTo(lx, ch); ctx.stroke();
+
+    if (laneFlashes[i] > 0) {
+      let grad = ctx.createLinearGradient(0, ch, 0, 0);
+      grad.addColorStop(0, `rgba(251, 191, 36, ${laneFlashes[i]})`);
+      grad.addColorStop(1, `rgba(251, 191, 36, 0)`);
+      ctx.fillStyle = grad; ctx.fillRect(lx, 0, laneW, ch);
+      laneFlashes[i] -= dt * 3;
+      if(laneFlashes[i] < 0) laneFlashes[i] = 0;
     }
-    
     if(controlMode === 'touch') {
-        ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(0, intHitLineY); ctx.lineTo(cw, intHitLineY); ctx.stroke();
+      ctx.fillStyle = "rgba(30,41,59,0.5)"; ctx.fillRect(lx, intHitLineY, laneW, ch - intHitLineY);
     }
-    
-    for(let i=notes.length-1; i>=0; i--) {
-        let n = notes[i]; 
-        n.y += n.speed * dt;
-        
-        if(n.y > ch) {
-            if(n.isCorrect && n.active && n.wIdx === wordIdx) { 
-                mistakeCount++; 
-                if(mistakeCount >= 2) { lives--; mistakeCount = 0; showDamage(); playSound('damage'); }
-                combo = 0; updateInGameUI(); 
-                notes.forEach(nn => nn.active = false); 
-                if(controlMode === 'typing') typingInput.value = ''; 
-                spawnRow(); 
-            }
-            notes.splice(i, 1); continue;
-        }
-        if(!n.active) continue;
-        
-        let x = Math.round(n.lane * (cw/LANES) + (cw/LANES)/2);
-        let boxWidth = Math.round(Math.min((cw/LANES) - 10, 180)); 
-        let drawY = Math.round(n.y);
-        
-        ctx.fillStyle = "rgba(15,23,42,0.95)";
-        
-        let strokeCol = "white";
-        if(!isRealMode) {
-            if(n.isCorrect && n.wIdx === wordIdx) strokeCol = "#38bdf8"; 
-            else if(n.isCorrect && n.wIdx === wordIdx + 1) strokeCol = "#a855f7"; 
-            else strokeCol = "#94a3b8"; 
-        }
-        
-        ctx.strokeStyle = strokeCol;
-        ctx.lineWidth = 2; 
-        ctx.beginPath(); 
-        ctx.roundRect(x - Math.round(boxWidth/2), drawY - 25, boxWidth, 50, 8); 
-        ctx.fill(); ctx.stroke();
-        
-        ctx.fillStyle = "white"; ctx.font = "bold 15px 'Noto Serif KR'"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        ctx.fillText(n.text, x, drawY + 2, boxWidth - 10);
+  }
+
+  if(controlMode === 'touch') {
+    ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(0, intHitLineY); ctx.lineTo(cw, intHitLineY); ctx.stroke();
+  }
+
+  for(let i=notes.length-1; i>=0; i--) {
+    let n = notes[i];
+    n.y += n.speed * dt;
+
+    if(n.y > ch) {
+      if(n.isCorrect && n.active && n.wIdx === wordIdx) {
+        mistakeCount++;
+        if(mistakeCount >= 2) { lives--; mistakeCount = 0; showDamage(); playSound('damage'); }
+        combo = 0; updateInGameUI();
+        notes.forEach(nn => nn.active = false);
+        if(controlMode === 'typing') typingInput.value = '';
+        spawnRow();
+      }
+      notes.splice(i, 1); continue;
     }
-    updateParticles(dt);
-    if(lives <= 0) endStage(false);
-    requestAnimationFrame(gameLoop);
+    if(!n.active) continue;
+
+    let x = Math.round(n.lane * (cw/LANES) + (cw/LANES)/2);
+    let boxWidth = Math.round(Math.min((cw/LANES) - 10, 180));
+    let drawY = Math.round(n.y);
+
+    ctx.fillStyle = "rgba(15,23,42,0.95)";
+
+    let strokeCol = "white";
+    if(!isRealMode) {
+      if(n.isCorrect && n.wIdx === wordIdx) strokeCol = "#38bdf8";
+      else if(n.isCorrect && n.wIdx === wordIdx + 1) strokeCol = "#a855f7";
+      else strokeCol = "#94a3b8";
+    }
+
+    ctx.strokeStyle = strokeCol;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(x - Math.round(boxWidth/2), drawY - 25, boxWidth, 50, 8);
+    ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = "white"; ctx.font = "bold 15px 'Noto Serif KR'"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(n.text, x, drawY + 2, boxWidth - 10);
+  }
+  updateParticles(dt);
+  if(lives <= 0) endStage(false);
+  requestAnimationFrame(gameLoop);
 }
 
 function triggerLane(lane, px, py) {
-    if(!isPlaying || controlMode !== 'touch') return;
-    if(lane < 0 || lane >= LANES) return;
-    laneFlashes[lane] = 0.8; 
-    let target = null, minDist = 9999;
-    
-    notes.forEach(n => { 
-        if(n.active && n.lane === lane) { 
-            let d = ch - n.y; 
-            if(d > -50 && d < minDist) { minDist = d; target = n; } 
-        } 
-    });
-    
-    let hitX = px !== undefined ? px : lane * (cw/LANES) + (cw/LANES)/2;
-    let hitY = target ? target.y : (py !== undefined ? py : hitLineY);
-    
-    if(target) {
-        if(!target.isCorrect) { 
-            target.active = false; 
-            mistakeCount++;
-            combo = 0;
-            spawnParticles(hitX, target.y, "#ef4444"); 
-            playSound('damage'); 
-            if(mistakeCount >= 2) { lives--; mistakeCount = 0; showDamage(); }
-        } else {
-            if(target.wIdx === wordIdx) {
-                processHitSuccess(target, hitX);
-            } else { 
-                spawnParticles(hitX, hitY, "#ffffff"); 
-            }
-        }
-    } else { 
-        spawnParticles(hitX, hitY, "#ffffff"); 
+  if(!isPlaying || controlMode !== 'touch') return;
+  if(lane < 0 || lane >= LANES) return;
+  laneFlashes[lane] = 0.8;
+  let target = null, minDist = 9999;
+
+  notes.forEach(n => {
+    if(n.active && n.lane === lane) {
+      let d = ch - n.y;
+      if(d > -50 && d < minDist) { minDist = d; target = n; }
     }
-    updateInGameUI();
+  });
+
+  let hitX = px !== undefined ? px : lane * (cw/LANES) + (cw/LANES)/2;
+  let hitY = target ? target.y : (py !== undefined ? py : hitLineY);
+
+  if(target) {
+    if(!target.isCorrect) {
+      target.active = false;
+      mistakeCount++;
+      combo = 0;
+      spawnParticles(hitX, target.y, "#ef4444");
+      playSound('damage');
+      if(mistakeCount >= 2) { lives--; mistakeCount = 0; showDamage(); }
+    } else {
+      if(target.wIdx === wordIdx) {
+        processHitSuccess(target, hitX);
+      } else {
+        spawnParticles(hitX, hitY, "#ffffff");
+      }
+    }
+  } else {
+    spawnParticles(hitX, hitY, "#ffffff");
+  }
+  updateInGameUI();
 }
 
 typingInput.addEventListener('input', function() {
-    if(!isPlaying || controlMode !== 'typing') return;
-    
-    let typed = this.value.replace(/\s+/g, '');
-    let targetWord = currentWords[wordIdx];
-    let targetClean = targetWord.replace(/\s+/g, '');
-    
-    if(typed === targetClean) {
-        let targetNote = notes.find(n => n.active && n.isCorrect && n.wIdx === wordIdx);
-        if(targetNote) {
-            let hitX = targetNote.lane * (cw/LANES) + (cw/LANES)/2;
-            processHitSuccess(targetNote, hitX);
-            this.value = ''; 
-            updateInGameUI();
-        }
+  if(!isPlaying || controlMode !== 'typing') return;
+
+  let typed = this.value.replace(/\s+/g, '');
+  let targetWord = currentWords[wordIdx];
+  let targetClean = targetWord.replace(/\s+/g, '');
+
+  if(typed === targetClean) {
+    let targetNote = notes.find(n => n.active && n.isCorrect && n.wIdx === wordIdx);
+    if(targetNote) {
+      let hitX = targetNote.lane * (cw/LANES) + (cw/LANES)/2;
+      processHitSuccess(targetNote, hitX);
+      this.value = '';
+      updateInGameUI();
     }
+  }
 });
 
 document.addEventListener('click', () => { if(isPlaying && controlMode === 'typing') typingInput.focus(); });
 
 function processHitSuccess(targetNote, hitX) {
-    targetNote.active = false; 
-    let earned = 50 + combo*2;
-    if (isRealMode) earned *= 2;
-    score += earned; 
-    combo++; wordIdx++; 
-    spawnParticles(hitX, targetNote.y, "#4ade80"); playSound('hit'); updateVerseUI();
-    
-    let activeCorrectNotes = notes.filter(n => n.isCorrect && n.active).length;
-    if(activeCorrectNotes === 0) {
-        notes.forEach(n => n.active = false); 
-        if(wordIdx >= currentWords.length) setTimeout(loadNextVerse, 600); 
-        else setTimeout(spawnRow, 200); 
-    }
+  targetNote.active = false;
+  let earned = 50 + combo*2;
+  if (isRealMode) earned *= 2;
+  score += earned;
+  combo++; wordIdx++;
+  spawnParticles(hitX, targetNote.y, "#4ade80"); playSound('hit'); updateVerseUI();
+
+  let activeCorrectNotes = notes.filter(n => n.isCorrect && n.active).length;
+  if(activeCorrectNotes === 0) {
+    notes.forEach(n => n.active = false);
+    if(wordIdx >= currentWords.length) setTimeout(loadNextVerse, 600);
+    else setTimeout(spawnRow, 200);
+  }
 }
 
 function handleInput(x, y) { if(controlMode === 'touch') triggerLane(Math.floor(x / (cw/LANES)), x, y); }
 
 window.addEventListener('keydown', (e) => {
-    if(!isPlaying) return;
-    initSysAudio();
-    if(controlMode === 'touch') {
-        let k = e.key.toLowerCase(), l = -1;
-        if(k === '1' || k === 'a' || k === 'ㅁ') l = 0;
-        else if(k === '2' || k === 's' || k === 'ㄴ') l = 1;
-        else if(k === '3' || k === 'd' || k === 'ㅇ') l = 2;
-        else if(k === '4' || k === 'k' || k === 'ㅏ') l = 3;
-        else if(k === '5' || k === 'l' || k === 'ㅣ') l = 4;
-        if(l !== -1) triggerLane(l);
-    }
+  if(!isPlaying) return;
+  initSysAudio();
+  if(controlMode === 'touch') {
+    let k = e.key.toLowerCase(), l = -1;
+    if(k === '1' || k === 'a' || k === 'ㅁ') l = 0;
+    else if(k === '2' || k === 's' || k === 'ㄴ') l = 1;
+    else if(k === '3' || k === 'd' || k === 'ㅇ') l = 2;
+    else if(k === '4' || k === 'k' || k === 'ㅏ') l = 3;
+    else if(k === '5' || k === 'l' || k === 'ㅣ') l = 4;
+    if(l !== -1) triggerLane(l);
+  }
 });
 
 function updateInGameUI() {
-    document.getElementById('ui-score').innerText = score;
-    document.getElementById('ui-hit').innerText = combo + " CB";
-    let h = ""; for(let i=0; i<3; i++) h += i < lives ? "❤️" : "🖤";
-    document.getElementById('ui-lives').innerText = h;
+  document.getElementById('ui-score').innerText = score;
+  document.getElementById('ui-hit').innerText = combo + " CB";
+  let h = ""; for(let i=0; i<3; i++) h += i < lives ? "❤️" : "🖤";
+  document.getElementById('ui-lives').innerText = h;
 }
 
 function showDamage() { let o = document.getElementById('damage-overlay'); o.style.opacity = 0.5; setTimeout(()=>o.style.opacity=0, 200); }
 
 function endStage(win) {
-    isPlaying = false; bgm.pause(); document.getElementById('game-ui').classList.add('hidden');
-    document.getElementById('typing-container').classList.add('hidden');
-    
-    let isNewRecord = false;
-    if (win) {
-        localStorage.setItem('rev_clear_' + selectedTrackDef.id, 'true');
-        let oldScore = parseInt(localStorage.getItem('rev_score_' + selectedTrackDef.id) || 0);
-        if (score > oldScore) { localStorage.setItem('rev_score_' + selectedTrackDef.id, score); isNewRecord = true; }
-    }
-    const sc = document.getElementById('screen-result');
-    document.getElementById('result-title').innerText = win ? "CLEAR! 🎉" : "GAME OVER 😢";
-    document.getElementById('result-title').style.color = win ? "#4ade80" : "#ef4444";
-    document.getElementById('result-msg').innerText = win ? `[${selectedTrackDef.title}] 마스터!` : "조금만 더 집중해 보세요!";
-    document.getElementById('result-score').innerText = score;
-    const hsMsg = document.getElementById('result-highscore-msg');
-    if(isNewRecord) hsMsg.classList.remove('hidden'); else hsMsg.classList.add('hidden');
-    sc.classList.remove('hidden');
+  isPlaying = false; bgm.pause(); document.getElementById('game-ui').classList.add('hidden');
+  document.getElementById('typing-container').classList.add('hidden');
+
+  let isNewRecord = false;
+  if (win) {
+    localStorage.setItem('rev_clear_' + selectedTrackDef.id, 'true');
+    let oldScore = parseInt(localStorage.getItem('rev_score_' + selectedTrackDef.id) || 0);
+    if (score > oldScore) { localStorage.setItem('rev_score_' + selectedTrackDef.id, score); isNewRecord = true; }
+  }
+  const sc = document.getElementById('screen-result');
+  document.getElementById('result-title').innerText = win ? "CLEAR! 🎉" : "GAME OVER 😢";
+  document.getElementById('result-title').style.color = win ? "#4ade80" : "#ef4444";
+  document.getElementById('result-msg').innerText = win ? `[${selectedTrackDef.title}] 마스터!` : "조금만 더 집중해 보세요!";
+  document.getElementById('result-score').innerText = score;
+  const hsMsg = document.getElementById('result-highscore-msg');
+  if(isNewRecord) hsMsg.classList.remove('hidden'); else hsMsg.classList.add('hidden');
+  sc.classList.remove('hidden');
 }
 
 canvas.addEventListener('touchstart', e => { e.preventDefault(); initSysAudio(); for(let t of e.changedTouches) handleInput(t.clientX, t.clientY); }, {passive:false});
 canvas.addEventListener('mousedown', e => { initSysAudio(); handleInput(e.clientX, e.clientY); });
 window.onresize = resize;
-function resize() { 
-    cw = canvas.width = window.innerWidth; 
-    ch = canvas.height = window.innerHeight; 
-    hitLineY = ch * 0.85; 
+function resize() {
+  cw = canvas.width = window.innerWidth;
+  ch = canvas.height = window.innerHeight;
+  hitLineY = ch * 0.85;
 }
 window.visualViewport ? window.visualViewport.addEventListener('resize', resize) : null;
 resize();
 
 function spawnParticles(x, y, color) { for(let i=0; i<12; i++) particles.push({x, y, vx:(Math.random()-0.5)*400, vy:(Math.random()-0.5)*400, life:1, color}); }
 function updateParticles(dt) {
-    for(let i=particles.length-1; i>=0; i--) {
-        let p = particles[i]; p.x += p.vx*dt; p.y += p.vy*dt; p.life -= dt*2;
-        if(p.life <= 0) particles.splice(i,1); else { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2); ctx.fill(); }
-    }
-    ctx.globalAlpha = 1;
+  for(let i=particles.length-1; i>=0; i--) {
+    let p = particles[i]; p.x += p.vx*dt; p.y += p.vy*dt; p.life -= dt*2;
+    if(p.life <= 0) particles.splice(i,1); else { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2); ctx.fill(); }
+  }
+  ctx.globalAlpha = 1;
 }
 </script>
 </body>
