@@ -2,13 +2,13 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>비트 & 슬라이스: 실전 암송 마스터</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>비트 & 슬라이스 · 4분기 부화 & 피버</title>
+
 <!-- 💡 data.js 파일을 불러옵니다 -->
-<script src="data.js"></script>
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&display=swap');
+900&display=swap');
 body { margin: 0; background-color: #020617; font-family: 'Noto Serif KR', serif; color: white; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
 canvas { display: block; width: 100vw; height: 100vh; }
 .hidden { display: none !important; }
@@ -70,12 +70,24 @@ backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 .track-list::-webkit-scrollbar { width: 6px; }
 .track-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
 .track-list::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+
+/* 원본의 어두운 게임 화면과 노란 포인트를 유지합니다. */
+*{box-sizing:border-box}body{font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif}button,input{font:inherit}canvas{position:fixed;inset:0;touch-action:none}.screen{touch-action:pan-y}.screen-center{justify-content:center}.radio-container>label{flex:1}.radio-label{font-size:12px;padding:9px 2px;letter-spacing:-.4px}.setting-group{max-width:440px}.track-list{max-width:440px;max-height:30vh;flex-shrink:0}.track-item{width:100%;text-align:left;color:white;flex-shrink:0}.quarter-only{text-align:center;color:#fde68a;font-size:13px;border-color:#6b582c;background:#272316}.pet-summary{font-size:14px;color:#fde68a;margin:12px 0 5px;text-align:center}.save-note{font-size:11px;color:#94a3b8;margin:0 0 20px;text-align:center}.result-detail{text-align:center;font-size:13px;color:#cbd5e1;margin:8px 0;max-width:400px;line-height:1.6}
+#game-ui{background:linear-gradient(#020617 80%,rgba(2,6,23,.96));padding:8px 8px 9px;gap:5px}#verse-display{max-height:105px;overflow-y:auto;font-size:14px;line-height:1.6;padding:8px 12px;background:#0d1527;position:relative;pointer-events:auto;touch-action:pan-y}.extras-row{width:100%;max-width:800px;display:flex;align-items:center;gap:8px;justify-content:space-between}#pet-label{font-size:11px;color:#cbd5e1}#pause-btn{pointer-events:auto;border:1px solid #475569;background:#182237;color:#cbd5e1;border-radius:7px;padding:5px 8px;font-size:11px;touch-action:manipulation}#fever-box{width:100%;max-width:800px;display:flex;gap:10px;align-items:center}#fever-label{font-size:11px;color:#94a3b8;min-width:120px}.fever-track{height:4px;flex:1;background:#273449;border-radius:4px;overflow:hidden}#fever-fill{height:100%;width:0;background:#60a5fa}#fever-box.on #fever-label{color:#fbbf24;font-weight:bold}#fever-box.on #fever-fill{background:linear-gradient(90deg,#f59e0b,#fde68a)}.pause-overlay{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:20px;background:#020617e8}.pause-panel{width:min(380px,100%);text-align:center;border:1px solid #475569;background:#0f172a;padding:25px 15px;border-radius:18px}.pause-panel p{font-size:13px;color:#94a3b8}.pause-panel h2{font-size:22px;color:#fbbf24}.pause-panel .btn{max-width:100%;margin:7px 0}input[type=radio]:focus-visible+.radio-label{outline:2px solid white}input[type=radio]{display:block;position:absolute;opacity:0;width:1px;height:1px}.btn:focus-visible,.track-item:focus-visible{outline:3px solid #7dd3fc;outline-offset:2px}
+/* 기존 Tailwind 유틸리티를 로컬 스타일로 대체해 오프라인에서도 실행합니다. */
+.text-xs{font-size:12px}.text-sm{font-size:14px}.text-lg{font-size:18px}.text-xl{font-size:20px}.text-2xl{font-size:24px}.font-bold,.font-black{font-weight:800}.text-yellow-400{color:#fbbf24}.text-white{color:white}.text-emerald-400,.text-green-400{color:#4ade80}.text-blue-400{color:#60a5fa}.text-red-400{color:#f87171}.text-purple-400{color:#c084fc}.text-gray-300{color:#cbd5e1}.text-gray-500{color:#64748b}.text-center{text-align:center}.w-full{width:100%}.mb-1{margin-bottom:4px}.mb-2{margin-bottom:8px}.mb-4{margin-bottom:16px}.mb-6{margin-bottom:24px}.mb-8{margin-bottom:32px}.mt-1{margin-top:4px}.mt-4{margin-top:16px}.pb-1{padding-bottom:4px}.border-b{border-bottom:1px solid #475569}.tracking-widest{letter-spacing:2px}
+@media(max-width:420px){.screen{padding:17px 12px}.title{font-size:30px}.radio-label{font-size:10px}.top-bar-compact{gap:6px}.info-pill{padding:4px 7px}#verse-display{max-height:92px;font-size:13px}#pet-label{font-size:10px}#ui-big-verse-id{font-size:14px}}
+@media(max-height:560px){#verse-display{max-height:60px}.screen-center{justify-content:flex-start}.title{margin-top:14px}.track-list{max-height:180px}}
+
+/* 모바일 파일 뷰어에서도 게임판은 불투명한 검정으로 유지합니다. */
+html,body{background:#000000;color-scheme:dark}#canvas{background:#000000;opacity:1}
 </style>
 </head>
 <body>
 
 <div id="screen-main" class="screen screen-center">
-<div class="title">비트 & 슬라이스<br><span style="font-size:1.2rem; color:white; text-shadow: none;">계시록 전술 암송기</span></div>
+<div class="title">비트 & 슬라이스<br><span style="font-size:1.2rem; color:white; text-shadow: none;">계시록 4분기 · 알과 함께</span></div>
+<div id="menu-pet" class="pet-summary"></div><div id="storage-note" class="save-note"></div>
 <button class="btn" onclick="initSysAudio(); showScreen('screen-setup')">트랙 선택 / 시작</button>
 <button class="btn btn-outline" onclick="showScreen('screen-guide')">상세 가이드 보기</button>
 </div>
@@ -87,29 +99,30 @@ backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 <div class="text-lg font-bold text-white mb-2 border-b border-gray-600 pb-1">⚡ 게임 핵심 룰</div>
 <div class="guide-li"><span class="text-emerald-400 font-bold">보이면 바로 치세요!</span><br>아래 노란선까지 기다릴 필요 없습니다. 정답이 보이면 바로 누르거나 타이핑하세요!</div>
 <div class="guide-li"><span class="text-red-400 font-bold">오답 터치는 독입니다.</span><br>가짜 단어(오답)를 치면 점수 없이 <b>'실수'</b>로 처리됩니다. 정답만 저격하세요!</div>
+<div class="guide-li"><b style="color:#7dd3fc">🐥 비행 모드</b><br>5개 레일의 무작위 두 곳에서 내려오는 문구 중 정답에 기체를 닿게 하세요. 화면을 누르거나 드래그해서 좌우 이동, 키보드는 ← → 또는 A·D입니다. 운석 충돌·오답·정답 놓침이 실수로 집계되며, 실수 2번마다 하트 1개가 줄어듭니다. 운석 충돌 후 1.2초간 운석에만 무적입니다. 연습에서는 정답에 파란 테두리가 보입니다.</div>
+<div class="guide-li"><b style="color:#7dd3fc">🌊 연속 낙하 · 정답 감속</b><br>정답을 칠 때마다 다음 노트를 보충하며 절 사이에도 계속 이어집니다. 정답 직후 0.6초 동안 60%에서 100%로 부드럽게 복귀합니다. 감속 시간은 중첩되지 않고 갱신되며, 피버의 6초는 실제 플레이 시간 기준입니다. 먼저 내려온 정답부터 순서대로 치세요.</div>
 <div class="guide-li"><span class="text-blue-400 font-bold">순서 엄수 (따닥 콤보)</span><br>정답이 2개 내려올 땐 <b>아래에 있는 먼저 나온 정답</b>부터 쳐야 합니다.</div>
 <div class="guide-li"><span class="text-purple-400 font-bold">생명력(❤️) 감소 조건</span><br>정답을 놓치거나, 오답을 잘못 치면 실수 스택이 쌓이며, <b>2번 실수마다</b> 하트가 깎입니다.</div>
 </div>
 
+<div class="setting-group"><div class="guide-li"><b style="color:#fde68a">🥚 장 전체를 완주하면 부화</b><br>도전 중 정답에 따라 알에 금이 생깁니다. 전체 도전 또는 스피드런을 처음부터 끝까지 완주해야 부화하며, 파트 연습은 부화에 합산되지 않습니다. 미완주 후 다시 시작하면 알의 진행은 초기화됩니다.<br>18장: 알 → 병아리(첫 완주) → 닭(이후 복습)<br>19장: 메추리 · 20장: 비둘기 · 21장: 참새 · 22장: 빛<br>완주한 장은 이후에도 완성된 모습으로 복습할 수 있습니다.</div><div class="guide-li"><b style="color:#fb923c">🔥 10콤보마다 피버 타임</b><br>10콤보를 달성한 뒤 6초 동안 점수 2배! 피버 중 다음 10콤보에 도달하면 6초로 갱신됩니다. 실수하면 피버가 종료됩니다. 실전 모드의 2배 점수와 중첩됩니다.</div><div class="guide-li">장별 부화 완료 기록은 같은 브라우저에 자동 저장됩니다. 다른 기기로 자동 이동하지 않으며 브라우저 데이터를 지우면 초기화됩니다. 일시정지하거나 다른 앱으로 전환하면 노트와 피버 시간이 함께 멈춥니다.</div></div>
 <button class="btn btn-outline mb-8" onclick="showScreen('screen-main')">메인으로 돌아가기</button>
 </div>
 
 <div id="screen-setup" class="screen hidden">
 <h2 class="text-lg font-black mb-2 text-white">트랙 선택 (클릭 시 바로 시작)</h2>
 
-<div class="setting-group">
-<div class="setting-title text-emerald-400">📅 범위 (분기) 선택</div>
-<div class="radio-container">
-<label><input type="radio" name="quarter" value="1" onchange="changeQuarter()" checked><div class="radio-label">1분기(1~6장)</div></label>
-<label><input type="radio" name="quarter" value="2" onchange="changeQuarter()"><div class="radio-label">2분기(7~12장)</div></label>
-<label><input type="radio" name="quarter" value="3" onchange="changeQuarter()"><div class="radio-label">3분기(13~17장)</div></label>
-<label><input type="radio" name="quarter" value="4" onchange="changeQuarter()"><div class="radio-label">4분기(18~22장)</div></label>
-</div>
-</div>
-
+<div class="setting-group quarter-only">4분기 · 계시록 18~22장</div>
 <div id="track-list-container" class="track-list"></div>
 
 <div class="setting-group">
+<div class="setting-title text-blue-400">🌊 낙하 방식</div>
+<div class="radio-container">
+<label><input type="radio" name="flow" value="pair" checked><div class="radio-label">기존 · 두 개씩</div></label>
+<label><input type="radio" name="flow" value="stream"><div class="radio-label">연속 낙하 · 정답 감속</div></label>
+<label><input type="radio" name="flow" value="flight"><div class="radio-label">비행 · 운석 피하기</div></label>
+</div><p style="font-size:11px;color:#94a3b8;margin:8px 0 12px">연속 모드는 정답마다 0.6초간 60% 속도에서 원래 속도로 돌아옵니다.</p>
+<p id="flight-help" class="hidden" style="font-size:12px;color:#7dd3fc;line-height:1.6">비행: 화면을 누르거나 좌우로 끌어 조종하세요. PC는 ← → 또는 A·D. 5개 레일 중 무작위 두 곳에 내려오는 문구에서 정답을 먹고, 무작위 레일의 운석은 피하세요. 타이핑은 사용하지 않습니다.</p>
 <div class="setting-title text-yellow-400">🕹️ 조작 방식</div>
 <div class="radio-container">
 <label><input type="radio" name="control" value="touch" checked><div class="radio-label">터치(5레인)</div></label>
@@ -151,9 +164,11 @@ backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 <div class="text-xl font-black text-yellow-400 mb-1">SCORE: <span id="result-score">0</span></div>
 <div id="result-highscore-msg" class="text-xs text-emerald-400 font-bold hidden">🎉 신기록 달성! 🎉</div>
 </div>
+<p id="result-pet" class="result-detail"></p><p id="result-growth" class="result-detail"></p>
 <button class="btn mt-4" onclick="showScreen('screen-setup')">트랙 선택으로</button>
 </div>
 
+<div id="pause-overlay" class="pause-overlay hidden"><div class="pause-panel"><h2>잠깐 쉬어가기</h2><p>노트와 피버 시간이 모두 멈췄어요.</p><button id="resume-btn" class="btn">계속하기</button><button id="quit-btn" class="btn btn-outline">결과 보고 나가기</button></div></div>
 <div id="damage-overlay"></div>
 
 <div id="game-ui" class="hidden">
@@ -169,6 +184,8 @@ backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 </div>
 </div>
 <div id="verse-display"></div>
+<div class="extras-row"><div><span id="pet-label"></span><span id="flow-status" style="margin-left:6px;font-size:10px;color:#7dd3fc"></span></div><button id="pause-btn" type="button">Ⅱ 일시정지</button></div>
+<div id="fever-box"><span id="fever-label">피버까지 10콤보</span><div class="fever-track"><div id="fever-fill"></div></div></div>
 </div>
 
 <div id="typing-container" class="hidden">
@@ -178,422 +195,473 @@ backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 <canvas id="canvas"></canvas>
 
 <script>
-// data.js의 window.BIBLE 데이터를 bibleData로 안전하게 변환
+window.BIBLE={"18":{"1":"이 일 후에 다른 천사가 하늘에서 내려오는 것을 보니 큰 권세를 가졌는데 그의 영광으로 땅이 환하여지더라","2":"힘센 음성으로 외쳐 가로되 무너졌도다 무너졌도다 큰 성 바벨론이여 귀신의 처소와 각종 더러운 영의 모이는 곳과 각종 더럽고 가증한 새의 모이는 곳이 되었도다","3":"그 음행의 진노의 포도주를 인하여 만국이 무너졌으며 또 땅의 왕들이 그로 더불어 음행하였으며 땅의 상고들도 그 사치의 세력을 인하여 치부하였도다 하더라","4":"또 내가 들으니 하늘로서 다른 음성이 나서 가로되 내 백성아, 거기서 나와 그의 죄에 참예하지 말고 그의 받을 재앙들을 받지 말라","5":"그 죄는 하늘에 사무쳤으며 하나님은 그의 불의한 일을 기억하신지라","6":"그가 준 그대로 그에게 주고 그의 행위대로 갑절을 갚아주고 그의 섞은 잔에도 갑절이나 섞어 그에게 주라","7":"그가 어떻게 자기를 영화롭게 하였으며 사치하였든지 그만큼 고난과 애통으로 갚아 주라 그가 마음에 말하기를 나는 여황으로 앉은 자요 과부가 아니라 결단코 애통을 당하지 아니하리라 하니","8":"그러므로 하루 동안에 그 재앙들이 이르리니 곧 사망과 애통과 흉년이라 그가 또한 불에 살라지리니 그를 심판하신 주 하나님은 강하신 자이심이니라","9":"그와 함께 음행하고 사치하던 땅의 왕들이 그 불붙는 연기를 보고 위하여 울고 가슴을 치며","10":"그 고난을 무서워하여 멀리 서서 가로되 화 있도다 화 있도다 큰 성, 견고한 성 바벨론이여 일시간에 네 심판이 이르렀다 하리로다","11":"땅의 상고들이 그를 위하여 울고 애통하는 것은 다시 그 상품을 사는 자가 없음이라","12":"그 상품은 금과 은과 보석과 진주와 세마포와 자주 옷감과 비단과 붉은 옷감이요 각종 향목과 각종 상아 기명이요 값진 나무와 진유와 철과 옥석으로 만든 각종 기명이요","13":"계피와 향료와 향과 향유와 유향과 포도주와 감람유와 고운 밀가루와 밀과 소와 양과 말과 수레와 종들과 사람의 영혼들이라","14":"바벨론아 네 영혼의 탐하던 과실이 네게서 떠났으며 맛 있는 것들과 빛난 것들이 다 없어졌으니 사람들이 결코 이것들을 다시 보지 못하리로다","15":"바벨론을 인하여 치부한 이 상품의 상고들이 그 고난을 무서워하여 멀리 서서 울고 애통하여","16":"가로되 화 있도다 화 있도다 큰 성이여 세마포와 자주와 붉은 옷을 입고 금과 보석과 진주로 꾸민 것인데","17":"그러한 부가 일시간에 망하였도다 각 선장과 각처를 다니는 선객들과 선인들과 바다에서 일하는 자들이 멀리 서서","18":"그 불붙는 연기를 보고 외쳐 가로되 이 큰 성과 같은 성이 어디 있느뇨 하며","19":"티끌을 자기 머리에 뿌리고 울고 애통하여 외쳐 가로되 화 있도다 화 있도다 이 큰 성이여 바다에서 배 부리는 모든 자들이 너의 보배로운 상품을 인하여 치부하였더니 일시간에 망하였도다","20":"하늘과 성도들과 사도들과 선지자들아 그를 인하여 즐거워하라 하나님이 너희를 신원하시는 심판을 그에게 하셨음이라 하더라","21":"이에 한 힘센 천사가 큰 맷돌 같은 돌을 들어 바다에 던져 가로되 큰 성 바벨론이 이같이 몹시 떨어져 결코 다시 보이지 아니하리로다","22":"또 거문고 타는 자와 풍류하는 자와 퉁소 부는 자와 나팔 부는 자들의 소리가 결코 다시 네 가운데서 들리지 아니하고 물론 어떠한 세공업자든지 결코 다시 네 가운데서 보이지 아니하고 또 맷돌 소리가 결코 다시 네 가운데서 들리지 아니하고","23":"등불 빛이 결코 다시 네 가운데서 비취지 아니하고 신랑과 신부의 음성이 결코 다시 네 가운데서 들리지 아니하리로다 너의 상고들은 땅의 왕족들이라 네 복술을 인하여 만국이 미혹되었도다","24":"선지자들과 성도들과 및 땅 위에서 죽임을 당한 모든 자의 피가 이 성중에서 보였느니라 하더라"},"19":{"1":"이 일 후에 내가 들으니 하늘에 허다한 무리의 큰 음성 같은 것이 있어 가로되 할렐루야 구원과 영광과 능력이 우리 하나님께 있도다","2":"그의 심판은 참되고 의로운지라 음행으로 땅을 더럽게 한 큰 음녀를 심판하사 자기 종들의 피를 그의 손에 갚으셨도다 하고","3":"두번째 가로되 할렐루야 하더니 그 연기가 세세토록 올라가더라","4":"또 이십 사 장로와 네 생물이 엎드려 보좌에 앉으신 하나님께 경배하여 가로되 아멘 할렐루야 하니","5":"보좌에서 음성이 나서 가로되 하나님의 종들 곧 그를 경외하는 너희들아 무론대소하고 다 우리 하나님께 찬송하라 하더라","6":"또 내가 들으니 허다한 무리의 음성도 같고 많은 물 소리도 같고 큰 뇌성도 같아서 가로되 할렐루야 주 우리 하나님 곧 전능하신 이가 통치하시도다","7":"우리가 즐거워하고 크게 기뻐하여 그에게 영광을 돌리세 어린 양의 혼인 기약이 이르렀고 그 아내가 예비하였으니","8":"그에게 허락하사 빛나고 깨끗한 세마포를 입게 하셨은즉 이 세마포는 성도들의 옳은 행실이로다 하더라","9":"천사가 내게 말하기를 기록하라 어린 양의 혼인 잔치에 청함을 입은 자들이 복이 있도다 하고 또 내게 말하되 이것은 하나님의 참되신 말씀이라 하기로","10":"내가 그 발 앞에 엎드려 경배하려 하니 그가 나더러 말하기를 나는 너와 및 예수의 증거를 받은 네 형제들과 같이 된 종이니 삼가 그리하지 말고 오직 하나님께 경배하라 예수의 증거는 대언의 영이라 하더라","11":"또 내가 하늘이 열린 것을 보니 보라 백마와 탄 자가 있으니 그 이름은 충신과 진실이라 그가 공의로 심판하며 싸우더라","12":"그 눈이 불꽃 같고 그 머리에 많은 면류관이 있고 또 이름 쓴 것이 하나가 있으니 자기 밖에 아는 자가 없고","13":"또 그가 피 뿌린 옷을 입었는데 그 이름은 하나님의 말씀이라 칭하더라","14":"하늘에 있는 군대들이 희고 깨끗한 세마포를 입고 백마를 타고 그를 따르더라","15":"그의 입에서 이한 검이 나오니 그것으로 만국을 치겠고 친히 저희를 철장으로 다스리며 또 친히 하나님 곧 전능하신 이의 맹렬한 진노의 포도주 틀을 밟겠고","16":"그 옷과 그 다리에 이름 쓴 것이 있으니 만왕의 왕이요 만주의 주라 하였더라","17":"또 내가 보니 한 천사가 해에 서서 공중에 나는 모든 새를 향하여 큰 음성으로 외쳐 가로되 와서 하나님의 큰 잔치에 모여","18":"왕들의 고기와 장군들의 고기와 장사들의 고기와 말들과 그 탄 자들의 고기와 자유한 자들이나 종들이나 무론대소하고 모든 자의 고기를 먹으라 하더라","19":"또 내가 보매 그 짐승과 땅의 임금들과 그 군대들이 모여 그 말 탄 자와 그의 군대로 더불어 전쟁을 일으키다가","20":"짐승이 잡히고 그 앞에서 이적을 행하던 거짓 선지자도 함께 잡혔으니 이는 짐승의 표를 받고 그의 우상에게 경배하던 자들을 이적으로 미혹하던 자라 이 둘이 산채로 유황불 붙는 못에 던지우고","21":"그 나머지는 말 탄 자의 입으로 나오는 검에 죽으매 모든 새가 그 고기로 배불리우더라"},"20":{"1":"또 내가 보매 천사가 무저갱 열쇠와 큰 쇠사슬을 그 손에 가지고 하늘로서 내려와서","2":"용을 잡으니 곧 옛 뱀이요 마귀요 사단이라 잡아 일천년 동안 결박하여","3":"무저갱에 던져 잠그고 그 위에 인봉하여 천년이 차도록 다시는 만국을 미혹하지 못하게 하였다가 그 후에는 반드시 잠간 놓이리라","4":"또 내가 보좌들을 보니 거기 앉은 자들이 있어 심판하는 권세를 받았더라 또 내가 보니 예수의 증거와 하나님의 말씀을 인하여 목 베임을 받은 자의 영혼들과 또 짐승과 그의 우상에게 경배하지도 아니하고 이마와 손에 그의 표를 받지도 아니한 자들이 살아서 그리스도로 더불어 천년 동안 왕노릇 하니","5":"(그 나머지 죽은 자들은 그 천년이 차기까지 살지 못하더라) 이는 첫째 부활이라","6":"이 첫째 부활에 참예하는 자들은 복이 있고 거룩하도다 둘째 사망이 그들을 다스리는 권세가 없고 도리어 그들이 하나님과 그리스도의 제사장이 되어 천년 동안 그리스도로 더불어 왕노릇 하리라","7":"천년이 차매 사단이 그 옥에서 놓여","8":"나와서 땅의 사방 백성 곧 곡과 마곡을 미혹하고 모아 싸움을 붙이리니 그 수가 바다 모래 같으리라","9":"저희가 지면에 널리 퍼져 성도들의 진과 사랑하시는 성을 두르매 하늘에서 불이 내려와 저희를 소멸하고","10":"또 저희를 미혹하는 마귀가 불과 유황 못에 던지우니 거기는 그 짐승과 거짓 선지자도 있어 세세토록 밤낮 괴로움을 받으리라","11":"또 내가 크고 흰 보좌와 그 위에 앉으신 자를 보니 땅과 하늘이 그 앞에서 피하여 간데 없더라","12":"또 내가 보니 죽은 자들이 무론 대소하고 그 보좌 앞에 섰는데 책들이 펴 있고 또 다른 책이 펴졌으니 곧 생명책이라 죽은 자들이 자기 행위를 따라 책들에 기록된대로 심판을 받으니","13":"바다가 그 가운데서 죽은 자들을 내어주고 또 사망과 음부도 그 가운데서 죽은 자들을 내어주매 각 사람이 자기의 행위대로 심판을 받고","14":"사망과 음부도 불못에 던지우니 이것은 둘째 사망 곧 불못이라","15":"누구든지 생명책에 기록되지 못한 자는 불못에 던지우더라"},"21":{"1":"또 내가 새 하늘과 새 땅을 보니 처음 하늘과 처음 땅이 없어졌고 바다도 다시 있지 않더라","2":"또 내가 보매 거룩한 성 새 예루살렘이 하나님께로부터 하늘에서 내려오니 그 예비한 것이 신부가 남편을 위하여 단장한 것 같더라","3":"내가 들으니 보좌에서 큰 음성이 나서 가로되 보라 하나님의 장막이 사람들과 함께 있으매 하나님이 저희와 함께 거하시리니 저희는 하나님의 백성이 되고 하나님은 친히 저희와 함께 계셔서","4":"모든 눈물을 그 눈에서 씻기시매 다시 사망이 없고 애통하는 것이나 곡하는 것이나 아픈 것이 다시 있지 아니하리니 처음 것들이 다 지나갔음이러라","5":"보좌에 앉으신 이가 가라사대 보라 내가 만물을 새롭게 하노라 하시고 또 가라사대 이 말은 신실하고 참되니 기록하라 하시고","6":"또 내게 말씀하시되 이루었도다 나는 알파와 오메가요 처음과 나중이라 내가 생명수 샘물로 목 마른 자에게 값 없이 주리니","7":"이기는 자는 이것들을 유업으로 얻으리라 나는 저의 하나님이 되고 그는 내 아들이 되리라","8":"그러나 두려워하는 자들과 믿지 아니하는 자들과 흉악한 자들과 살인자들과 행음자들과 술객들과 우상 숭배자들과 모든 거짓말 하는 자들은 불과 유황으로 타는 못에 참예하리니 이것이 둘째 사망이라","9":"일곱 대접을 가지고 마지막 일곱 재앙을 담은 일곱 천사중 하나가 나아와서 내게 말하여 가로되 이리 오라 내가 신부 곧 어린 양의 아내를 네게 보이리라 하고","10":"성령으로 나를 데리고 크고 높은 산으로 올라가 하나님께로부터 하늘에서 내려오는 거룩한 성 예루살렘을 보이니","11":"하나님의 영광이 있으매 그 성의 빛이 지극히 귀한 보석 같고 벽옥과 수정 같이 맑더라","12":"크고 높은 성곽이 있고 열 두 문이 있는데 문에 열 두 천사가 있고 그 문들 위에 이름을 썼으니 이스라엘 자손 열 두 지파의 이름들이라","13":"동편에 세 문, 북편에 세 문, 남편에 세 문, 서편에 세 문이니","14":"그 성에 성곽은 열 두 기초석이 있고 그 위에 어린 양의 십 이 사도의 열 두 이름이 있더라","15":"내게 말하는 자가 그 성과 그 문들과 성곽을 척량하려고 금 갈대를 가졌더라","16":"그 성은 네모가 반듯하여 장광이 같은지라 그 갈대로 그 성을 척량하니 일만 이천 스다디온이요 장과 광과 고가 같더라","17":"그 성곽을 척량하매 일백 사십 사 규빗이니 사람의 척량 곧 천사의 척량이라","18":"그 성곽은 벽옥으로 쌓였고 그 성은 정금인데 맑은 유리 같더라","19":"그 성의 성곽의 기초석은 각색 보석으로 꾸몄는데 첫째 기초석은 벽옥이요 둘째는 남보석이요 세째는 옥수요 네째는 녹보석이요","20":"다섯째는 홍마노요 여섯째는 홍보석이요 일곱째는 황옥이요 여덟째는 녹옥이요 아홉째는 담황옥이요 열째는 비취옥이요 열 한째는 청옥이요 열 둘째는 자정이라","21":"그 열 두 문은 열 두 진주니 문마다 한 진주요 성의 길은 맑은 유리 같은 정금이더라","22":"성안에 성전을 내가 보지 못하였으니 이는 주 하나님 곧 전능하신 이와 및 어린 양이 그 성전이심이라","23":"그 성은 해나 달의 비췸이 쓸데 없으니 이는 하나님의 영광이 비취고 어린 양이 그 등이 되심이라","24":"만국이 그 빛 가운데로 다니고 땅의 왕들이 자기 영광을 가지고 그리로 들어오리라","25":"성문들을 낮에 도무지 닫지 아니하리니 거기는 밤이 없음이라","26":"사람들이 만국의 영광과 존귀를 가지고 그리로 들어오겠고","27":"무엇이든지 속된 것이나 가증한 일 또는 거짓말 하는 자는 결코 그리로 들어오지 못하되 오직 어린 양의 생명책에 기록된 자들뿐이라"},"22":{"1":"또 저가 수정 같이 맑은 생명수의 강을 내게 보이니 하나님과 및 어린 양의 보좌로부터 나서","2":"길 가운데로 흐르더라 강 좌우에 생명 나무가 있어 열 두가지 실과를 맺히되 달마다 그 실과를 맺히고 그 나무 잎사귀들은 만국을 소성하기 위하여 있더라","3":"다시 저주가 없으며 하나님과 그 어린 양의 보좌가 그 가운데 있으리니 그의 종들이 그를 섬기며","4":"그의 얼굴을 볼터이요 그의 이름도 저희 이마에 있으리라","5":"다시 밤이 없겠고 등불과 햇빛이 쓸데 없으니 이는 주 하나님이 저희에게 비취심이라 저희가 세세토록 왕노릇하리로다","6":"또 그가 내게 말하기를 이 말은 신실하고 참된지라 주 곧 선지자들의 영의 하나님이 그의 종들에게 결코 속히 될 일을 보이시려고 그의 천사를 보내셨도다","7":"보라 내가 속히 오리니 이 책의 예언의 말씀을 지키는 자가 복이 있으리라 하더라","8":"이것들을 보고 들은 자는 나 요한이니 내가 듣고 볼 때에 이 일을 내게 보이던 천사의 발 앞에 경배하려고 엎드렸더니","9":"저가 내게 말하기를 나는 너와 네 형제 선지자들과 또 이 책의 말을 지키는 자들과 함께 된 종이니 그리하지 말고 오직 하나님께 경배하라 하더라","10":"또 내게 말하되 이 책의 예언의 말씀을 인봉하지 말라 때가 가까우니라","11":"불의를 하는 자는 그대로 불의를 하고 더러운 자는 그대로 더럽고 의로운 자는 그대로 의를 행하고 거룩한 자는 그대로 거룩되게 하라","12":"보라 내가 속히 오리니 내가 줄 상이 내게 있어 각 사람에게 그의 일한대로 갚아 주리라","13":"나는 알파와 오메가요 처음과 나중이요 시작과 끝이라","14":"그 두루마기를 빠는 자들은 복이 있으니 이는 저희가 생명 나무에 나아가며 문들을 통하여 성에 들어갈 권세를 얻으려 함이로다","15":"개들과 술객들과 행음자들과 살인자들과 우상 숭배자들과 및 거짓말을 좋아하며 지어내는 자마다 성밖에 있으리라","16":"나 예수는 교회들을 위하여 내 사자를 보내어 이것들을 너희에게 증거하게 하였노라 나는 다윗의 뿌리요 자손이니 곧 광명한 새벽별이라 하시더라","17":"성령과 신부가 말씀하시기를 오라 하시는도다 듣는 자도 오라 할 것이요 목마른 자도 올 것이요 또 원하는 자는 값 없이 생명수를 받으라 하시더라","18":"내가 이 책의 예언의 말씀을 듣는 각인에게 증거하노니 만일 누구든지 이것들 외에 더하면 하나님이 이 책에 기록된 재앙들을 그에게 더하실 터이요","19":"만일 누구든지 이 책의 예언의 말씀에서 제하여 버리면 하나님이 이 책에 기록된 생명 나무와 및 거룩한 성에 참예함을 제하여 버리시리라","20":"이것들을 증거하신 이가 가라사대 내가 진실로 속히 오리라 하시거늘 아멘 주 예수여 오시옵소서","21":"주 예수의 은혜가 모든 자들에게 있을찌어다 아멘"}};
+'use strict';
+// 원본의 5레인 / 정답 2개 연속 낙하 / 순서 판정 / 점수 공식을 유지합니다.
+const $ = id => document.getElementById(id);
 const bibleData = {};
-if (window.BIBLE) {
-  for (let ch in window.BIBLE) {
-    bibleData[ch] = [];
-    for (let v in window.BIBLE[ch]) {
-      bibleData[ch].push({
-        v: parseInt(v),
-        t: window.BIBLE[ch][v],
-        c: parseInt(ch)
-      });
-    }
-  }
-} else {
-  alert("data.js 파일을 찾을 수 없거나 데이터가 올바르지 않습니다.");
+for (let c = 18; c <= 22; c++) {
+  bibleData[c] = Object.entries(window.BIBLE[c]).map(([v,t]) => ({c,v:+v,t})).sort((a,b)=>a.v-b.v);
 }
-
-let trackDefs = [];
-
-function changeQuarter() {
-  const q = parseInt(document.querySelector('input[name="quarter"]:checked').value);
-
-  let startCh = 1, endCh = 6;
-  if (q === 2) { startCh = 7; endCh = 12; }
-  else if (q === 3) { startCh = 13; endCh = 17; }
-  else if (q === 4) { startCh = 18; endCh = 22; }
-
-  trackDefs = [];
-  for (let ch = startCh; ch <= endCh; ch++) {
-    let chKey = String(ch);
-    // 문자열 키값으로 안전하게 조회
-    if (!bibleData[chKey]) continue;
-    let totalVerses = bibleData[chKey].length;
-
-    if (totalVerses >= 12) {
-      let mid = Math.floor(totalVerses / 2);
-      trackDefs.push({ id: `t${ch}_1`, ch: chKey, start: 1, end: mid, title: `계 ${ch}장 파트1 (1~${mid}절)`, speed: 1.0, isSpeedrun: false });
-      trackDefs.push({ id: `t${ch}_2`, ch: chKey, start: mid + 1, end: totalVerses, title: `계 ${ch}장 파트2 (${mid+1}~${totalVerses}절)`, speed: 1.0, isSpeedrun: false });
-    } else {
-      trackDefs.push({ id: `t${ch}_f`, ch: chKey, start: 1, end: totalVerses, title: `계 ${ch}장 전체 (1~${totalVerses}절)`, speed: 1.0, isSpeedrun: false });
-    }
-
-    trackDefs.push({ id: `t${ch}_speed`, ch: chKey, start: 1, end: totalVerses, title: `계 ${ch}장 ⚡스피드런`, speed: 1.3, isSpeedrun: true });
+let trackDefs = [], audioCtx;
+let storageOK = true;
+function readStore(key, fallback='0') { try { return localStorage.getItem(key) ?? fallback; } catch { storageOK=false; return fallback; } }
+function saveStore(key,value) { try { localStorage.setItem(key,String(value)); } catch { storageOK=false; } }
+const PETS={18:{name:'닭',icon:'🐔'},19:{name:'메추리',icon:'🐦'},20:{name:'비둘기',icon:'🕊️'},21:{name:'참새',icon:'🐦'},22:{name:'빛',icon:'✨'}};
+const chapterPets={};for(let c=18;c<=22;c++)chapterPets[c]=readStore('bs_chapter_hatched_'+c)==='true';
+let petHits=0,chapterTotal=1,petForm='egg';
+function petChapter(){return Number(selectedTrackDef?.ch||18);}
+function wholeChapter(){return selectedTrackDef&&selectedTrackDef.start===1&&selectedTrackDef.end===bibleData[selectedTrackDef.ch].length;}
+function petStatus(){
+  const c=petChapter();
+  if(petForm==='chick')return '18장 · 병아리 탄생! 다음 복습부터 닭';
+  if(petForm==='adult')return `${c}장 · ${PETS[c].name} · 복습 중`;
+  return `${c}장 · 알 ${Math.min(99,Math.floor(petHits/chapterTotal*100))}% · ${wholeChapter()?'전체 완주 시 부화':'파트 연습 · 부화는 전체 도전에서'}`;
+}
+function updatePetLabel(){
+  $('pet-label').textContent=petStatus();
+  $('menu-pet').textContent=Object.keys(PETS).map(c=>`${c}장 ${chapterPets[c]?PETS[c].icon+' '+PETS[c].name:'🥚'}`).join(' · ');
+  $('storage-note').textContent=storageOK?'완주한 장의 부화만 저장됩니다. 미완주 도전은 다시 알부터 시작합니다.':'저장 불가 · 완료 기록은 이번 실행 동안만 유지됩니다.';
+}
+function splitWords(text) {
+  const result=[]; let temp='';
+  for (const w of text.split(/\s+/)) {
+    if ((temp+w).length < 8) temp+=(temp?' ':'')+w;
+    else { if(temp)result.push(temp); temp=w; }
   }
-
+  if(temp)result.push(temp);
+  return result;
+}
+function changeQuarter() {
+  trackDefs=[];
+  for(let c=18;c<=22;c++) {
+    const total=bibleData[c].length, mid=Math.floor(total/2);
+    trackDefs.push({id:`t${c}_full`,ch:String(c),start:1,end:total,title:`계 ${c}장 전체 도전 (1~${total}절)`,speed:1,isSpeedrun:false});
+    trackDefs.push({id:`t${c}_1`,ch:String(c),start:1,end:mid,title:`계 ${c}장 파트1 (1~${mid}절)`,speed:1,isSpeedrun:false});
+    trackDefs.push({id:`t${c}_2`,ch:String(c),start:mid+1,end:total,title:`계 ${c}장 파트2 (${mid+1}~${total}절)`,speed:1,isSpeedrun:false});
+    trackDefs.push({id:`t${c}_speed`,ch:String(c),start:1,end:total,title:`계 ${c}장 ⚡스피드런`,speed:1.3,isSpeedrun:true});
+  }
   renderTrackList();
 }
-
-let audioCtx;
 function initSysAudio() {
-  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if(audioCtx.state === 'suspended') audioCtx.resume();
+  try { audioCtx ??= new (window.AudioContext || window.webkitAudioContext)(); if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{}); } catch {}
 }
-
 function playSound(type) {
-  if(!audioCtx) return;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.connect(gain); gain.connect(audioCtx.destination);
-  if(type === 'hit') {
-    osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-  } else if(type === 'damage') {
-    osc.type = 'square'; osc.frequency.setValueAtTime(100, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-  }
+  if(!audioCtx)return;
+  const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.connect(g);g.connect(audioCtx.destination);
+  const t=audioCtx.currentTime;
+  o.type=type==='damage'?'triangle':'sine'; o.frequency.setValueAtTime(type==='damage'?130:type==='hatch'?1100:800,t);
+  g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.16);o.start();o.stop(t+.16);
 }
-
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-let cw, ch, isPlaying = false, isRealMode = false, controlMode = 'touch';
-let speedMultiplier = 1.0;
-let selectedTrackDef = null;
-let currentVerseList = [], verseProgressIdx = 0, currentWords = [], wordIdx = 0;
-let decoyChunks = [];
-let notes = [], particles = [], score = 0, combo = 0, lives = 3, mistakeCount = 0;
-let bgm = new Audio(), lastTime = 0;
-const LANES = 5, BASE_NOTE_SPEED = 240;
-let laneFlashes = [0, 0, 0, 0, 0];
-let hitLineY = 0;
-
-const typingInput = document.getElementById('typing-input');
-const typingContainer = document.getElementById('typing-container');
-
-document.getElementById('bgm-upload').onchange = (e) => { if(e.target.files[0]) bgm.src = URL.createObjectURL(e.target.files[0]); };
-
+const canvas=$('canvas'), ctx=canvas.getContext('2d', {alpha:false});
+let cw=0,ch=0,playTop=130,hitLineY=0,isPlaying=false,isPaused=false,isRealMode=false,controlMode='touch';
+let speedMultiplier=1,selectedTrackDef=null,currentVerseList=[],verseProgressIdx=0,currentWords=[],wordIdx=0;
+let flowMode='pair',streamItems=[],streamIndex=0,streamNext=0,slowLeft=0;
+let notes=[],particles=[],decoyChunks=[],score=0,combo=0,lives=3,mistakeCount=0;
+let lastTime=0,raf=0,pendingAction=null,pendingDelay=0,feverLeft=0,fevers=0,maxCombo=0,sessionHits=0;
+let petBounce=0,petHurt=0,hatchFlash=0,sceneTime=0,notice='',noticeLeft=0,damageLeft=0;
+const LANES=5,BASE_NOTE_SPEED=240;
+let laneFlashes=[0,0,0,0,0];
+const typingInput=$('typing-input'),typingContainer=$('typing-container');
+const bgm=new Audio();let bgmURL='';bgm.loop=true;bgm.volume=.45;
+$('bgm-upload').onchange=e=>{
+  bgm.pause();if(bgmURL)URL.revokeObjectURL(bgmURL);
+  const f=e.target.files[0];bgmURL=f?URL.createObjectURL(f):'';
+  if(bgmURL)bgm.src=bgmURL;else bgm.removeAttribute('src');
+};
+function startMusic(){if(bgmURL)bgm.play().catch(()=>{});}
+// 피버가 있는 이번 버전 기록은 이전 점수와 섞지 않습니다.
+function recordKey(){return `rev_q4_egg_${selectedTrackDef.id}_${controlMode}_${isRealMode?'real':'practice'}_${speedMultiplier}${flowMode==='pair'?'':'_'+flowMode}`;}
 function renderTrackList() {
-  const container = document.getElementById('track-list-container');
-  container.innerHTML = '';
-  trackDefs.forEach(td => {
-    let savedScore = localStorage.getItem('rev_score_' + td.id) || 0;
-    let isCleared = localStorage.getItem('rev_clear_' + td.id) === 'true';
-    let div = document.createElement('div');
-    div.className = `track-item ${td.isSpeedrun ? 'speedrun-bg' : ''}`;
-    div.onclick = () => {
-      initSysAudio();
-      launchGame(td);
-    };
-    let clearBadge = isCleared ? '<div class="badge-clear">CLEAR</div>' : '';
-    div.innerHTML = `${clearBadge}<div class="track-title">${td.title}</div><div class="track-score">최고 기록: ${savedScore}</div>`;
-    container.appendChild(div);
-  });
+  const container=$('track-list-container');container.replaceChildren();
+  const cm=document.querySelector('input[name="flow"]:checked').value==='flight'?'touch':document.querySelector('input[name="control"]:checked').value;
+  const diff=document.querySelector('input[name="difficulty"]:checked').value;
+  const speed=document.querySelector('input[name="speed"]:checked').value;
+  const flow=document.querySelector('input[name="flow"]:checked').value;
+  for(const td of trackDefs){
+    const key=`rev_q4_egg_${td.id}_${cm}_${diff}_${Number(speed)}${flow==='pair'?'':'_'+flow}`;
+    const b=document.createElement('button'); b.className=`track-item ${td.isSpeedrun?'speedrun-bg':''}`;
+    b.onclick=()=>{initSysAudio();launchGame(td);};
+    const title=document.createElement('span');title.className='track-title';title.textContent=td.title;
+    const sub=document.createElement('span');sub.className='track-score';sub.textContent=`최고 기록: ${readStore(key)}${readStore(key+'_clear','')==='true'?' · CLEAR':''}`;
+    const pet=document.createElement('span');pet.className='track-score';pet.textContent=chapterPets[td.ch]?`${PETS[td.ch].icon} ${PETS[td.ch].name} · 복습`:(td.start===1&&td.end===bibleData[td.ch].length?'🥚 전체 완주하면 부화':'🥚 파트 연습 (부화 기록 없음)');
+    b.append(title,sub,pet);container.append(b);
+  }
 }
-
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-  if(id === 'screen-setup') changeQuarter();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));$(id).classList.remove('hidden');
+  if(id==='screen-setup')changeQuarter();updatePetLabel();
 }
-
-function launchGame(trackDef) {
-  selectedTrackDef = trackDef;
-  isRealMode = document.querySelector('input[name="difficulty"]:checked').value === 'real';
-  controlMode = document.querySelector('input[name="control"]:checked').value;
-  speedMultiplier = parseFloat(document.querySelector('input[name="speed"]:checked').value);
-
-  currentVerseList = bibleData[trackDef.ch].filter(v => v.v >= trackDef.start && v.v <= trackDef.end);
-
-  decoyChunks = [];
-  bibleData[trackDef.ch].forEach(v => {
-    let raw = v.t.split(" "); let temp = "";
-    raw.forEach(w => {
-      if((temp + w).length < 8) temp += (temp?" ":"")+w;
-      else { if(temp) decoyChunks.push(temp); temp = w; }
-    });
-    if(temp) decoyChunks.push(temp);
+function launchGame(td) {
+  cancelAnimationFrame(raf);pendingAction=null;pendingDelay=0;
+  selectedTrackDef=td;petHits=0;chapterTotal=bibleData[td.ch].reduce((sum,v)=>sum+splitWords(v.t).length,0);petForm=chapterPets[td.ch]?'adult':'egg';
+  isRealMode=document.querySelector('input[name="difficulty"]:checked').value==='real';
+  controlMode=document.querySelector('input[name="control"]:checked').value;
+  speedMultiplier=+document.querySelector('input[name="speed"]:checked').value;
+  $('flow-status').textContent='';
+  flowMode=document.querySelector('input[name="flow"]:checked').value;if(flowMode==='flight')controlMode='touch';slowLeft=0;streamIndex=0;streamNext=0;
+  currentVerseList=bibleData[td.ch].filter(v=>v.v>=td.start&&v.v<=td.end);
+  decoyChunks=[...new Set(bibleData[td.ch].flatMap(v=>splitWords(v.t)))];
+  isPlaying=true;isPaused=false;score=0;combo=0;lives=3;mistakeCount=0;verseProgressIdx=0;notes=[];particles=[];
+  feverLeft=0;fevers=0;maxCombo=0;sessionHits=0;petHurt=0;petBounce=0;hatchFlash=0;damageLeft=0;noticeLeft=0;laneFlashes.fill(0);
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  $('game-ui').classList.remove('hidden');$('pause-overlay').classList.add('hidden');
+  typingContainer.classList.toggle('hidden',controlMode!=='typing');typingInput.value='';
+  if(controlMode==='typing')typingInput.focus();
+  if(bgmURL){bgm.currentTime=0;startMusic();}
+  updateInGameUI();updatePetLabel();resize();resetFlight();
+  if(isContinuous()){
+    streamItems=currentVerseList.flatMap((v,vi)=>{const words=splitWords(v.t);return words.map((text,wi)=>({text,wi,vi,v,words}));});
+    syncStreamVerse();fillStream(true);
+  }else loadNextVerse();
+  resize();lastTime=performance.now();raf=requestAnimationFrame(gameLoop);
+}
+function loadNextVerse(){
+  if(!isPlaying)return;
+  if(verseProgressIdx>=currentVerseList.length){endStage(true);return;}
+  const v=currentVerseList[verseProgressIdx++];$('ui-big-verse-id').textContent=`계 ${v.c}장 ${v.v}절`;
+  currentWords=splitWords(v.t);wordIdx=0;updateVerseUI();spawnRow();
+}
+function updateVerseUI(){
+  const box=$('verse-display');box.replaceChildren();
+  currentWords.forEach((w,i)=>{
+    if(i>wordIdx&&isRealMode)return;
+    const span=document.createElement('span');span.className=i<wordIdx?'word-done':i===wordIdx?'word-target':'word-future';
+    span.textContent=(i===wordIdx?'[ ? ]':w)+' ';box.append(span);
   });
-
-  isPlaying = true; score = 0; combo = 0; lives = 3; verseProgressIdx = 0; mistakeCount = 0; notes = []; laneFlashes = [0,0,0,0,0];
-  document.getElementById('screen-setup').classList.add('hidden');
-  document.getElementById('game-ui').classList.remove('hidden');
-
-  if(controlMode === 'typing') {
-    typingContainer.classList.remove('hidden');
-    typingInput.value = '';
-    setTimeout(() => typingInput.focus(), 100);
-  } else {
-    typingContainer.classList.add('hidden');
-  }
-
-  if(bgm.src) { bgm.loop = true; bgm.currentTime = 0; bgm.play(); }
-
-  resize(); lastTime = performance.now();
-  loadNextVerse();
-  requestAnimationFrame(gameLoop);
+  const target=box.querySelector('.word-target');if(target)box.scrollTop=Math.max(0,target.offsetTop-box.offsetTop-30);
+  playTop=Math.min(ch*.43,$('game-ui').getBoundingClientRect().bottom+10);
 }
 
-function loadNextVerse() {
-  if(verseProgressIdx >= currentVerseList.length) { endStage(true); return; }
-  const v = currentVerseList[verseProgressIdx++];
-  document.getElementById('ui-big-verse-id').innerText = `계 ${v.c}장 ${v.v}절`;
-
-  let raw = v.t.split(" "); currentWords = []; let temp = "";
-  raw.forEach(w => {
-    if((temp + w).length < 8) temp += (temp?" ":"")+w;
-    else { currentWords.push(temp); temp = w; }
-  });
-  if(temp) currentWords.push(temp);
-
-  wordIdx = 0; updateVerseUI(); spawnRow();
+function isCurrentNote(n){return isContinuous()?n.seq===streamIndex:n.wIdx===wordIdx;}
+function syncStreamVerse(){
+  const item=streamItems[streamIndex];if(!item)return;
+  currentWords=item.words;wordIdx=item.wi;verseProgressIdx=item.vi+1;
+  $('ui-big-verse-id').textContent=`계 ${item.v.c}장 ${item.v.v}절`;
+  updateVerseUI();
 }
-
-function updateVerseUI() {
-  let html = "";
-  currentWords.forEach((w, i) => {
-    if(i < wordIdx) html += `<span class="word-done">${w} </span>`;
-    else if(i === wordIdx) html += `<span class="word-target">[ ? ] </span>`;
-    else if(!isRealMode) html += `<span class="word-future">${w} </span>`;
-  });
-  document.getElementById('verse-display').innerHTML = html;
-}
-
-function spawnRow() {
-  if(wordIdx >= currentWords.length) return;
-
-  let targetsToSpawn = [];
-  let availableLanes = [0, 1, 2, 3, 4].sort(() => Math.random() - 0.5);
-
-  targetsToSpawn.push({ text: currentWords[wordIdx], wIdx: wordIdx, y: -120 });
-  if(wordIdx + 1 < currentWords.length) {
-    targetsToSpawn.push({ text: currentWords[wordIdx+1], wIdx: wordIdx+1, y: -300 });
-  }
-
-  let trackSpeed = BASE_NOTE_SPEED * selectedTrackDef.speed * speedMultiplier;
-  if (controlMode === 'typing') trackSpeed *= 0.5;
-
-  targetsToSpawn.forEach(t => {
-    notes.push({ lane: availableLanes.pop(), text: t.text, isCorrect: true, wIdx: t.wIdx, y: t.y, speed: trackSpeed, active: true });
-  });
-
-  while(availableLanes.length > 0) {
-    let decoyText = decoyChunks[Math.floor(Math.random() * decoyChunks.length)];
-    if(!decoyText || decoyText.length === 0 || targetsToSpawn.find(t => t.text === decoyText)) continue;
-    notes.push({ lane: availableLanes.pop(), text: decoyText, isCorrect: false, wIdx: -1, y: -120 - Math.random() * 250, speed: trackSpeed * (0.8 + Math.random() * 0.4), active: true });
+function fillStream(initial=false){
+  if(flowMode==='flight'){fillFlight(initial);return;}
+  const speed=BASE_NOTE_SPEED*selectedTrackDef.speed*speedMultiplier*(controlMode==='typing'?.5:1);
+  // 앞의 노트를 지우지 않고 네 개의 정답을 이어서 준비합니다.
+  // 같은 속도와 145px 간격으로 다음 절까지 자연스럽게 연결합니다.
+  while(streamNext<streamItems.length&&notes.filter(n=>n.active&&n.isCorrect).length<4){
+    const active=notes.filter(n=>n.active&&n.isCorrect);
+    const highest=active.length?Math.min(...active.map(n=>n.y)):Infinity;
+    const y=active.length?Math.min(playTop-45,highest-145):initial?playTop+36:playTop-45;
+    const previous=active.at(-1)?.lane;
+    let lanes=shuffle([0,1,2,3,4]).filter(l=>l!==previous&&!notes.some(n=>n.active&&!n.isCorrect&&n.lane===l));
+    if(!lanes.length){notes=notes.filter(n=>n.isCorrect);lanes=shuffle([0,1,2,3,4]).filter(l=>l!==previous);}
+    const lane=lanes[0],item=streamItems[streamNext];
+    notes.push({lane,text:item.text,isCorrect:true,wIdx:item.wi,seq:streamNext,y,speed,active:true});
+    streamNext++;
+    // 오답이 정답 레인 앞을 막지 않도록 다른 레인에만 배치합니다.
+    const decoyLanes=shuffle([0,1,2,3,4]).filter(l=>!notes.some(n=>n.active&&n.lane===l));
+    const forbidden=new Set(streamItems.slice(streamIndex,streamNext+4).map(q=>q.text));
+    const pool=decoyChunks.filter(t=>!forbidden.has(t));
+    if(decoyLanes.length&&pool.length)notes.push({lane:decoyLanes[0],text:pool[Math.floor(Math.random()*pool.length)],isCorrect:false,wIdx:-1,seq:-1,y:y-40,speed,active:true});
   }
 }
 
-function gameLoop(time) {
-  if(!isPlaying) return;
-  let dt = (time - lastTime) / 1000;
-  if (dt > 0.1) dt = 0.1;
-  lastTime = time;
-
-  ctx.clearRect(0,0,cw,ch);
-
-  let intHitLineY = Math.round(hitLineY);
-
-  for(let i=0; i<LANES; i++) {
-    let lx = Math.round(i*(cw/LANES));
-    let laneW = Math.round(cw/LANES);
-
-    ctx.strokeStyle = "rgba(255,255,255,0.05)"; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(lx, 0); ctx.lineTo(lx, ch); ctx.stroke();
-
-    if (laneFlashes[i] > 0) {
-      let grad = ctx.createLinearGradient(0, ch, 0, 0);
-      grad.addColorStop(0, `rgba(251, 191, 36, ${laneFlashes[i]})`);
-      grad.addColorStop(1, `rgba(251, 191, 36, 0)`);
-      ctx.fillStyle = grad; ctx.fillRect(lx, 0, laneW, ch);
-      laneFlashes[i] -= dt * 3;
-      if(laneFlashes[i] < 0) laneFlashes[i] = 0;
-    }
-    if(controlMode === 'touch') {
-      ctx.fillStyle = "rgba(30,41,59,0.5)"; ctx.fillRect(lx, intHitLineY, laneW, ch - intHitLineY);
-    }
-  }
-
-  if(controlMode === 'touch') {
-    ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(0, intHitLineY); ctx.lineTo(cw, intHitLineY); ctx.stroke();
-  }
-
-  for(let i=notes.length-1; i>=0; i--) {
-    let n = notes[i];
-    n.y += n.speed * dt;
-
-    if(n.y > ch) {
-      if(n.isCorrect && n.active && n.wIdx === wordIdx) {
-        mistakeCount++;
-        if(mistakeCount >= 2) { lives--; mistakeCount = 0; showDamage(); playSound('damage'); }
-        combo = 0; updateInGameUI();
-        notes.forEach(nn => nn.active = false);
-        if(controlMode === 'typing') typingInput.value = '';
-        spawnRow();
-      }
-      notes.splice(i, 1); continue;
-    }
-    if(!n.active) continue;
-
-    let x = Math.round(n.lane * (cw/LANES) + (cw/LANES)/2);
-    let boxWidth = Math.round(Math.min((cw/LANES) - 10, 180));
-    let drawY = Math.round(n.y);
-
-    ctx.fillStyle = "rgba(15,23,42,0.95)";
-
-    let strokeCol = "white";
-    if(!isRealMode) {
-      if(n.isCorrect && n.wIdx === wordIdx) strokeCol = "#38bdf8";
-      else if(n.isCorrect && n.wIdx === wordIdx + 1) strokeCol = "#a855f7";
-      else strokeCol = "#94a3b8";
-    }
-
-    ctx.strokeStyle = strokeCol;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.roundRect(x - Math.round(boxWidth/2), drawY - 25, boxWidth, 50, 8);
-    ctx.fill(); ctx.stroke();
-
-    ctx.fillStyle = "white"; ctx.font = "bold 15px 'Noto Serif KR'"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(n.text, x, drawY + 2, boxWidth - 10);
-  }
-  updateParticles(dt);
-  if(lives <= 0) endStage(false);
-  requestAnimationFrame(gameLoop);
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function spawnRow(){
+  if(!isPlaying||wordIdx>=currentWords.length)return;
+  notes=[];
+  const lanes=shuffle([0,1,2,3,4]);const targets=[{text:currentWords[wordIdx],wIdx:wordIdx,y:-120}];
+  if(wordIdx+1<currentWords.length)targets.push({text:currentWords[wordIdx+1],wIdx:wordIdx+1,y:-300});
+  let speed=BASE_NOTE_SPEED*selectedTrackDef.speed*speedMultiplier;if(controlMode==='typing')speed*=.5;
+  for(const t of targets)notes.push({...t,lane:lanes.pop(),isCorrect:true,speed,active:true});
+  const pool=decoyChunks.filter(t=>!targets.some(n=>n.text===t));
+  // 짧은 데이터에서도 무한 루프 없이 끝납니다.
+  while(lanes.length&&pool.length){const text=pool[Math.floor(Math.random()*pool.length)];notes.push({lane:lanes.pop(),text,isCorrect:false,wIdx:-1,y:-120-Math.random()*250,speed:speed*(.8+Math.random()*.4),active:true});}
 }
-
-function triggerLane(lane, px, py) {
-  if(!isPlaying || controlMode !== 'touch') return;
-  if(lane < 0 || lane >= LANES) return;
-  laneFlashes[lane] = 0.8;
-  let target = null, minDist = 9999;
-
-  notes.forEach(n => {
-    if(n.active && n.lane === lane) {
-      let d = ch - n.y;
-      if(d > -50 && d < minDist) { minDist = d; target = n; }
-    }
-  });
-
-  let hitX = px !== undefined ? px : lane * (cw/LANES) + (cw/LANES)/2;
-  let hitY = target ? target.y : (py !== undefined ? py : hitLineY);
-
-  if(target) {
-    if(!target.isCorrect) {
-      target.active = false;
-      mistakeCount++;
-      combo = 0;
-      spawnParticles(hitX, target.y, "#ef4444");
-      playSound('damage');
-      if(mistakeCount >= 2) { lives--; mistakeCount = 0; showDamage(); }
-    } else {
-      if(target.wIdx === wordIdx) {
-        processHitSuccess(target, hitX);
-      } else {
-        spawnParticles(hitX, hitY, "#ffffff");
-      }
-    }
-  } else {
-    spawnParticles(hitX, hitY, "#ffffff");
+function schedule(action,delay){pendingAction=action;pendingDelay=delay;}
+function registerMistake(){
+  mistakeCount++;combo=0;feverLeft=0;petHurt=1;damageLeft=.2;playSound('damage');
+  notice=petForm!=='egg'?'앗! 다시 해보자.':'앗! 다시 집중해요.';noticeLeft=.8;
+  if(mistakeCount>=2){lives--;mistakeCount=0;}updateInGameUI();
+  if(lives<=0)endStage(false);
+}
+function gameLoop(time){
+  if(!isPlaying||isPaused)return;
+  const dt=Math.min(.1,Math.max(0,(time-lastTime)/1000));lastTime=time;sceneTime+=dt;
+  feverLeft=Math.max(0,feverLeft-dt);petHurt=Math.max(0,petHurt-dt);petBounce=Math.max(0,petBounce-dt);hatchFlash=Math.max(0,hatchFlash-dt);noticeLeft=Math.max(0,noticeLeft-dt);damageLeft=Math.max(0,damageLeft-dt);
+  if(pendingAction){pendingDelay-=dt;if(pendingDelay<=0){const next=pendingAction;pendingAction=null;next();if(!isPlaying)return;}}
+  const factor=isContinuous()?1-.4*Math.max(0,slowLeft)/.6:1;
+  for(const n of notes)n.y+=n.speed*dt*factor;
+  slowLeft=Math.max(0,slowLeft-dt);
+  if(isContinuous())$('flow-status').textContent=slowLeft>0?'정답 감속 · '+Math.round(factor*100)+'%':flowMode==='flight'?'비행 · 좌우로 이동':'연속 낙하';
+  if(flowMode==='flight'){updateFlight(dt,factor);if(!isPlaying)return;}
+  const missed=notes.find(n=>n.active&&n.isCorrect&&isCurrentNote(n)&&n.y>ch);
+  if(missed){registerMistake();if(!isPlaying)return;typingInput.value='';if(flowMode==='flight')retryFlight();else if(isContinuous()){notes=[];streamNext=streamIndex;slowLeft=0;fillStream(true);}else spawnRow();}
+  notes=notes.filter(n=>n.y<=ch+80&&n.active);
+  if(flowMode==='stream'&&controlMode==='typing'&&typingInput.value)checkTyping();
+  drawScene(dt);updateFeverUI();
+  $('damage-overlay').style.opacity=damageLeft>0?.15:0;
+  raf=requestAnimationFrame(gameLoop);
+}
+function drawScene(dt=0){
+  // 투명 캔버스 아래의 흰 바탕이 비치지 않도록 매 프레임 불투명하게 칠합니다.
+  ctx.globalAlpha=1;ctx.fillStyle='#000000';ctx.fillRect(0,0,cw,ch);
+  drawPet(); // 노트보다 먼저 그려 항상 배경에 둡니다.
+  if(flowMode==='flight')drawFlightBackground();
+  for(let i=0;i<LANES;i++){
+    const x=i*cw/LANES,w=cw/LANES;
+    ctx.strokeStyle='#596b82';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,playTop);ctx.lineTo(x,ch);ctx.stroke();
+    if(laneFlashes[i]>0){const g=ctx.createLinearGradient(0,ch,0,playTop);g.addColorStop(0,`rgba(251,191,36,${laneFlashes[i]*.5})`);g.addColorStop(1,'rgba(251,191,36,0)');ctx.fillStyle=g;ctx.fillRect(x,playTop,w,ch-playTop);laneFlashes[i]=Math.max(0,laneFlashes[i]-dt*3);}
   }
+  if(controlMode==='touch'&&flowMode!=='flight'){
+    ctx.fillStyle='rgba(30,41,59,.45)';ctx.fillRect(0,hitLineY,cw,ch-hitLineY);
+    ctx.strokeStyle=feverLeft>0?'#fb923c':'#fbbf24';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,hitLineY);ctx.lineTo(cw,hitLineY);ctx.stroke();
+  }
+  ctx.save();ctx.beginPath();ctx.rect(0,playTop,cw,ch-playTop);ctx.clip();
+  for(const n of notes){if(!n.active)continue;
+    const x=noteX(n), w=Math.min(cw/LANES-8,180);
+    ctx.font=`bold ${cw<500?13:15}px system-ui, sans-serif`;
+    const rows=wrapText(n.text,w-12);const height=Math.max(50,rows.length*19+16);
+    ctx.fillStyle='rgba(15,23,42,.96)';ctx.strokeStyle=isRealMode?'#e2e8f0':n.isCorrect?(isCurrentNote(n)?'#38bdf8':'#a855f7'):'#94a3b8';ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(x-w/2,n.y-height/2,w,height,8);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';rows.forEach((r,j)=>ctx.fillText(r,x,n.y+(j-(rows.length-1)/2)*19));
+  }
+  updateParticles(dt);ctx.restore();
+  if(flowMode==='flight')drawFlightActors();
+  if(noticeLeft>0){ctx.save();ctx.textAlign='center';ctx.font='bold 16px system-ui';ctx.fillStyle='#fef3c7';ctx.shadowColor='#020617';ctx.shadowBlur=7;ctx.fillText(notice,cw/2,Math.min(ch-90,playTop+35));ctx.restore();}
+}
+function wrapText(text,width){const lines=[];let row='';for(const char of text){if(row&&ctx.measureText(row+char).width>width){lines.push(row.trim());row=char;}else row+=char;}if(row.trim())lines.push(row.trim());return lines;}
+function triggerLane(lane,px,py){
+  if(!isPlaying||isPaused||controlMode!=='touch'||flowMode==='flight'||lane<0||lane>=LANES)return;
+  laneFlashes[lane]=.8;
+  // 원본처럼 해당 레인에서 가장 먼저 내려온 노트를 판정합니다.
+  const target=notes.filter(n=>n.active&&n.lane===lane&&(flowMode!=='stream'||n.y>=playTop)).sort((a,b)=>b.y-a.y)[0];
+  const x=px??(lane+.5)*cw/LANES;
+  if(target){
+    if(!target.isCorrect){target.active=false;spawnParticles(x,Math.max(playTop,target.y),'#ef4444');registerMistake();}
+    else if(isCurrentNote(target))processHitSuccess(target,x);
+  }else spawnParticles(x,py??hitLineY,'#cbd5e1');
   updateInGameUI();
 }
+function processHitSuccess(target,x){
+  if(!isPlaying||isPaused||!target.active||!target.isCorrect||!isCurrentNote(target))return;
+  target.active=false;
+  if(flowMode==='flight')notes.forEach(n=>{if(n.pairSeq===target.seq)n.active=false;});
+  let earned=50+combo*2;if(isRealMode)earned*=2;if(feverLeft>0)earned*=2;
+  score+=earned;combo++;wordIdx++;maxCombo=Math.max(maxCombo,combo);sessionHits++;
+  petHits++;petBounce=.4;
+  if(combo%10===0){feverLeft=6;fevers++;if(hatchFlash<=0){notice='FEVER! 6초 동안 점수 ×2';noticeLeft=1.5;}}
+  spawnParticles(x,Math.max(playTop,target.y),feverLeft>0?'#fbbf24':'#4ade80');playSound('hit');updateVerseUI();updateInGameUI();updatePetLabel();
+  if(isContinuous()){slowLeft=.6;streamIndex++;if(streamIndex>=streamItems.length){notes=[];schedule(()=>endStage(true),.6);}else{syncStreamVerse();fillStream();}return;}
+  if(!notes.some(n=>n.active&&n.isCorrect)){
+    notes.forEach(n=>n.active=false);
+    schedule(wordIdx>=currentWords.length?loadNextVerse:spawnRow,wordIdx>=currentWords.length?.6:.2);
+  }
+}
+function checkTyping(){
+  if(!isPlaying||isPaused||controlMode!=='typing'||wordIdx>=currentWords.length)return;
+  const clean=s=>s.replace(/\s+/g,'');
+  if(clean(typingInput.value)===clean(currentWords[wordIdx])){
+    const target=notes.find(n=>n.active&&n.isCorrect&&isCurrentNote(n)&&(flowMode!=='stream'||n.y>=playTop));
+    if(target){processHitSuccess(target,(target.lane+.5)*cw/LANES);typingInput.value='';}
+  }
+}
+typingInput.addEventListener('input',e=>{if(!e.isComposing)checkTyping();});typingInput.addEventListener('compositionend',checkTyping);
+function updateFeverUI(){
+  $('fever-label').textContent=feverLeft>0?`🔥 FEVER ×2 · ${feverLeft.toFixed(1)}초`:`피버까지 ${10-combo%10}콤보`;
+  $('fever-fill').style.width=(feverLeft>0?feverLeft/6*100:(combo%10)*10)+'%';
+  $('fever-box').classList.toggle('on',feverLeft>0);
+}
+function updateInGameUI(){
+  $('ui-score').textContent=score;$('ui-hit').textContent=combo+' CB';$('ui-lives').textContent='❤️'.repeat(Math.max(0,lives))+'🖤'.repeat(Math.max(0,3-lives));updateFeverUI();
+}
+function endStage(win,quit=false){
+  if(!isPlaying)return;
+  isPlaying=false;isPaused=false;cancelAnimationFrame(raf);pendingAction=null;pendingDelay=0;bgm.pause();
+  $('game-ui').classList.add('hidden');typingContainer.classList.add('hidden');$('pause-overlay').classList.add('hidden');$('damage-overlay').style.opacity=0;
+  let born=false;
+  if(win&&wholeChapter()&&!chapterPets[petChapter()]){
+    chapterPets[petChapter()]=true;saveStore('bs_chapter_hatched_'+petChapter(),'true');
+    petForm=petChapter()===18?'chick':'adult';born=true;playSound('hatch');
+  }
+  let best=false;
+  if(win){const key=recordKey();saveStore(key+'_clear','true');if(score>Number(readStore(key))){saveStore(key,score);best=storageOK;}}
+  $('result-title').textContent=quit?'잠깐 쉬어가기':win?'CLEAR! 🎉':'GAME OVER';$('result-title').style.color=win?'#4ade80':'#fbbf24';
+  $('result-msg').textContent=win?`[${selectedTrackDef.title}] 마스터!`:quit?'미완주한 알은 다음 도전에서 처음부터 시작해요.':'다시 도전해봐요. 완주한 장의 부화 기록은 유지됩니다.';
+  $('result-score').textContent=score;$('result-highscore-msg').classList.toggle('hidden',!best);
+  $('result-pet').textContent=`${petForm==='egg'?'🥚':petForm==='chick'?'🐥':PETS[petChapter()].icon} 이번 정답 +${sessionHits} · 최대 ${maxCombo}콤보 · 피버 ${fevers}회`;
+  $('result-growth').textContent=(born?(petForm==='chick'?'🐥 병아리가 태어났어요! 다음 복습에서는 닭으로 함께해요.':PETS[petChapter()].icon+' '+PETS[petChapter()].name+' 탄생!'):petForm!=='egg'?(win?'복습 완료 · 부화 기록 유지':'부화 기록은 유지됩니다.'):win?'파트 연습 완료 · 장 전체를 완주하면 부화해요.':'이번 알의 진행은 저장되지 않습니다.')+(storageOK?'':' · 저장 불가');
+  if(!storageOK&&quit)$('result-msg').textContent='잠깐 쉬어가요. 이 환경에서는 성장 저장이 불가능해요.';
+  showScreen('screen-result');
+}
+function pauseGame(){if(!isPlaying||isPaused)return;isPaused=true;flightKeys.left=false;flightKeys.right=false;flightPointer=null;cancelAnimationFrame(raf);bgm.pause();$('pause-overlay').classList.remove('hidden');}
+function resumeGame(){if(!isPlaying||!isPaused)return;isPaused=false;$('pause-overlay').classList.add('hidden');lastTime=performance.now();startMusic();if(controlMode==='typing')typingInput.focus();raf=requestAnimationFrame(gameLoop);}
+$('pause-btn').onclick=pauseGame;$('resume-btn').onclick=resumeGame;$('quit-btn').onclick=()=>endStage(false,true);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseGame();});
+canvas.addEventListener('pointerdown',e=>{
+  if(!isPlaying||isPaused)return;e.preventDefault();initSysAudio();
+  if(flowMode==='flight'){flightPointer=e.pointerId;flightAim=e.clientX;canvas.setPointerCapture?.(e.pointerId);return;}
+  if(controlMode==='touch')triggerLane(Math.floor(e.clientX/(cw/LANES)),e.clientX,e.clientY);else typingInput.focus();
+});
+window.addEventListener('keydown',e=>{
+  if(!isPlaying||e.repeat||e.isComposing)return;
+  if(e.key==='Escape'){isPaused?resumeGame():pauseGame();return;}
+  if(isPaused)return;
+  if(flowMode==='flight'){if(['ArrowLeft','KeyA'].includes(e.code)){e.preventDefault();flightKeys.left=true;}if(['ArrowRight','KeyD'].includes(e.code)){e.preventDefault();flightKeys.right=true;}return;}
+  if(controlMode!=='touch')return;
+  const keys={'1':0,a:0,'ㅁ':0,'2':1,s:1,'ㄴ':1,'3':2,d:2,'ㅇ':2,'4':3,k:3,'ㅏ':3,'5':4,l:4,'ㅣ':4};
+  const lane=keys[e.key.toLowerCase()];if(lane!==undefined){e.preventDefault();initSysAudio();triggerLane(lane);}
+});
+function resize(){
+  cw=window.innerWidth;ch=window.visualViewport?.height||window.innerHeight;
+  const dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(cw*dpr);canvas.height=Math.round(ch*dpr);canvas.style.width=cw+'px';canvas.style.height=ch+'px';ctx.setTransform(dpr,0,0,dpr,0,0);
+  hitLineY=ch*.85;playTop=Math.min(ch*.43,$('game-ui').getBoundingClientRect().bottom+10);
+  if(isPlaying)drawScene();
+}
+window.addEventListener('resize',resize);window.visualViewport?.addEventListener('resize',resize);
+function spawnParticles(x,y,color){for(let i=0;i<12;i++)particles.push({x,y,vx:(Math.random()-.5)*400,vy:(Math.random()-.5)*400,life:1,color});}
+function updateParticles(dt){for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt*2;if(p.life<=0)particles.splice(i,1);else{ctx.globalAlpha=p.life;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();}}ctx.globalAlpha=1;}
+// 노트 뒤에 그려지는 알·병아리 배경 애니메이션.
+function drawPet(){
+  const floor=Math.min(ch*.73,playTop+(ch-playTop)*.66),size=Math.min(cw*.48,(ch-playTop)*.63,250),k=size/200;
+  ctx.save();ctx.translate(cw/2,floor);ctx.scale(k,k);
+  ctx.translate(petHurt>0?Math.sin(sceneTime*45)*5:0,-Math.sin(petBounce/.4*Math.PI)*14);
+  ctx.globalAlpha=.85;
+  ctx.fillStyle='rgba(148,163,184,.16)';ctx.beginPath();ctx.ellipse(0,16,65,10,0,0,Math.PI*2);ctx.fill();
+  if(petForm==='egg'){
+    const progress=Math.min(.99,petHits/chapterTotal);
+    ctx.rotate(Math.sin(sceneTime*2)*(.015+progress*.035));
+    const g=ctx.createLinearGradient(-50,-115,50,10);g.addColorStop(0,'#fff7d6');g.addColorStop(1,petHurt>0?'#e5a69d':'#d7caa3');ctx.fillStyle=g;ctx.strokeStyle='#e7d5a3';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(0,-127);ctx.bezierCurveTo(-30,-127,-53,-64,-53,-29);ctx.bezierCurveTo(-53,19,53,19,53,-29);ctx.bezierCurveTo(53,-64,30,-127,0,-127);ctx.fill();ctx.stroke();
+    const cracks=[[[0,-111],[-8,-95],[5,-84],[-4,-72],[10,-57]],[[10,-57],[0,-43],[13,-30],[4,-14]],[[5,-84],[22,-78],[29,-61],[42,-56]],[[-4,-72],[-23,-66],[-19,-49],[-39,-36]],[[13,-30],[31,-21],[28,-5]]];
+    ctx.strokeStyle='#596275';ctx.lineWidth=2.4;ctx.lineJoin='round';
+    for(let i=0;i<Math.min(5,Math.floor(progress*6));i++){ctx.beginPath();cracks[i].forEach(([x,y],j)=>j?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.stroke();}
+    ctx.fillStyle='#e2e8f0';ctx.font='12px system-ui';ctx.textAlign='center';ctx.fillText(`완주를 기다리는 알 · ${Math.floor(progress*100)}%`,0,42);
+  }else{
+    drawChapterCreature(petChapter(),petForm==='chick');
+  }
+  ctx.restore();
+}
+function drawChapterCreature(c,chick=false){
+  const oval=(x,y,rx,ry,color,angle=0)=>{ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(x,y,rx,ry,angle,0,Math.PI*2);ctx.fill();};
+  if(c===22){
+    const pulse=1+Math.sin(sceneTime*2)*.07;ctx.save();ctx.translate(0,-60);ctx.scale(pulse,pulse);
+    const glow=ctx.createRadialGradient(0,0,3,0,0,90);glow.addColorStop(0,petHurt>0?'#ffa3a3':'#fffde6');glow.addColorStop(.3,'rgba(255,224,120,.6)');glow.addColorStop(1,'rgba(255,220,110,0)');ctx.fillStyle=glow;ctx.fillRect(-95,-95,190,190);
+    ctx.rotate(sceneTime*.12);ctx.fillStyle=petHurt>0?'#ffb7a8':'#fff6be';ctx.beginPath();for(let i=0;i<16;i++){const a=i*Math.PI/8,r=i%2?12:i%4===0?59:34;i?ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r):ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r);}ctx.closePath();ctx.fill();ctx.restore();return;
+  }
+  const chicken=c===18&&!chick,quail=c===19,pigeon=c===20,sparrow=c===21;
+  const body=petHurt>0?'#e5a39a':chick?'#f2ce6c':chicken?'#f3e9d8':quail?'#b49a72':pigeon?'#c5cfdf':'#ad8864';
+  const wing=chick?'#dcb246':chicken?'#d6c7a6':quail?'#70583e':pigeon?'#8799b4':'#684e3a';
+  ctx.translate(0,Math.sin(sceneTime*3)*2);
+  // Tail, round body and wings keep the species readable behind falling notes.
+  if(!chick){for(let i=0;i<3;i++)oval(-42-i*3,-42-i*8,12,30,wing,-.7+i*.2);}
+  oval(0,-41,quail?45:47,quail?37:44,body);
+  ctx.save();ctx.translate(25,-42);ctx.rotate(Math.sin(sceneTime*5)*.07-petBounce*.5);oval(0,0,22,29,wing,-.4);ctx.restore();
+  oval(3,-83,31,32,body);
+  if(chicken){for(let i=0;i<3;i++)oval(-10+i*12,-114,9,13,'#d75954');oval(13,-61,7,12,'#d75954');}
+  if(quail){oval(4,-103,24,9,'#725438');for(let i=0;i<12;i++)oval(-29+(i%4)*15,-52+Math.floor(i/4)*13,2,4,'#68513c',-.3);}
+  if(sparrow){oval(4,-103,25,10,'#6a4d35');oval(-12,-78,12,10,'#eee1c7');oval(3,-66,7,10,'#443c35');}
+  if(pigeon){oval(6,-62,22,11,'#7caa9e');oval(-11,-86,8,7,'#e4d5bd');}
+  ctx.strokeStyle='#34333b';ctx.lineWidth=2.5;
+  for(const x of [-9,14]){if(petHurt>0){ctx.beginPath();ctx.moveTo(x-3,-89);ctx.lineTo(x+3,-83);ctx.moveTo(x+3,-89);ctx.lineTo(x-3,-83);ctx.stroke();}else oval(x,-86,2.8,3.8,'#34333b');}
+  ctx.fillStyle='#d49544';ctx.beginPath();ctx.moveTo(-2,-77);ctx.lineTo(10,-77);ctx.lineTo(4,-70);ctx.fill();
+  ctx.strokeStyle='#c99752';ctx.lineWidth=4;ctx.lineCap='round';for(const x of [-16,16]){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,13);ctx.lineTo(x-5,16);ctx.moveTo(x,13);ctx.lineTo(x+6,15);ctx.stroke();}
+  if(petHurt>0)oval(23,-71,4,7,'#91ccec');
+}
 
-typingInput.addEventListener('input', function() {
-  if(!isPlaying || controlMode !== 'typing') return;
-
-  let typed = this.value.replace(/\s+/g, '');
-  let targetWord = currentWords[wordIdx];
-  let targetClean = targetWord.replace(/\s+/g, '');
-
-  if(typed === targetClean) {
-    let targetNote = notes.find(n => n.active && n.isCorrect && n.wIdx === wordIdx);
-    if(targetNote) {
-      let hitX = targetNote.lane * (cw/LANES) + (cw/LANES)/2;
-      processHitSuccess(targetNote, hitX);
-      this.value = '';
-      updateInGameUI();
+// 비행 모드: 5개 레일의 무작위 두 문구 중 정답을 먹고 운석을 피합니다.
+let flightX=0,flightAim=0,flightShield=0,meteorClock=0,meteors=[],flightPointer=null;
+const flightKeys={left:false,right:false};
+function isContinuous(){return flowMode==='stream'||flowMode==='flight';}
+function noteX(n){return (n.lane+.5)*cw/LANES;}
+function flightY(){return Math.max(playTop+90,ch-65);}
+function resetFlight(){flightX=cw/2;flightAim=flightX;flightShield=1.2;meteorClock=1.7;meteors=[];flightPointer=null;flightKeys.left=false;flightKeys.right=false;}
+function fillFlight(initial=false){
+  const speed=BASE_NOTE_SPEED*selectedTrackDef.speed*speedMultiplier;
+  while(streamNext<streamItems.length&&notes.filter(n=>n.active&&n.isCorrect).length<3){
+    const active=notes.filter(n=>n.active&&n.isCorrect);
+    const y=active.length?Math.min(playTop-55,...active.map(n=>n.y-250)):initial?playTop-35:playTop-55;
+    const item=streamItems[streamNext],seq=streamNext++,lane=Math.floor(Math.random()*LANES);
+    const otherLanes=Array.from({length:LANES},(_,i)=>i).filter(i=>i!==lane);
+    const decoyLane=otherLanes[Math.floor(Math.random()*otherLanes.length)];
+    notes.push({lane,text:item.text,isCorrect:true,wIdx:item.wi,seq,pairSeq:seq,y,speed,active:true});
+    const forbidden=new Set(streamItems.slice(streamIndex,streamNext+3).map(q=>q.text));
+    const pool=decoyChunks.filter(t=>!forbidden.has(t));
+    if(pool.length)notes.push({lane:decoyLane,text:pool[Math.floor(Math.random()*pool.length)],isCorrect:false,wIdx:-1,seq:-1,pairSeq:seq,y,speed,active:true});
+  }
+}
+function retryFlight(){notes=[];streamNext=streamIndex;meteors=[];flightShield=1.2;meteorClock=1.4;slowLeft=0;fillFlight(true);}
+function updateFlight(dt,factor){
+  if(streamIndex>=streamItems.length){meteors=[];return;}
+  const speed=cw*2.5;
+  if(flightKeys.left||flightKeys.right)flightAim=flightX+(Number(flightKeys.right)-Number(flightKeys.left))*speed*dt;
+  flightAim=Math.max(20,Math.min(cw-20,flightAim));
+  flightX+=Math.max(-speed*dt,Math.min(speed*dt,flightAim-flightX));
+  flightX=Math.max(20,Math.min(cw-20,flightX));
+  flightShield=Math.max(0,flightShield-dt);
+  meteorClock-=dt*factor;
+  if(meteorClock<=0&&streamIndex<streamItems.length){
+    // 모든 레일에 출현하되 문구와 겹쳐 피할 수 없는 배치는 방지합니다.
+    const spawnY=playTop-35;
+    const lanes=Array.from({length:LANES},(_,i)=>i).filter(lane=>
+      !notes.some(n=>n.active&&n.lane===lane&&Math.abs(n.y-spawnY)<160)&&
+      !meteors.some(m=>m.lane===lane&&Math.abs(m.y-spawnY)<120));
+    if(lanes.length){
+      const lane=lanes[Math.floor(Math.random()*lanes.length)];
+      meteors.push({lane,x:(lane+.5)*cw/LANES,y:spawnY,r:Math.min(24,cw*.055),speed:BASE_NOTE_SPEED*speedMultiplier*selectedTrackDef.speed,baseX:(lane+.5)*cw/LANES,age:0,sway:cw/LANES*.6,phase:Math.random()*Math.PI*2,angle:Math.random()*6});
+    }
+    meteorClock=Math.max(.8,1.25/speedMultiplier)+Math.random()*.35;
+  }
+  for(const m of meteors){m.y+=m.speed*dt*factor;m.angle+=dt*.8;m.age=(m.age||0)+dt*factor;if(m.baseX!==undefined)m.x=Math.max(m.r+4,Math.min(cw-m.r-4,m.baseX+Math.sin(m.age*1.7+m.phase)*m.sway));}
+  meteors=meteors.filter(m=>m.y<ch+50);
+  const py=flightY(),radius=Math.min(17,cw*.04);
+  if(flightShield<=0){
+    const hit=meteors.find(m=>Math.hypot(m.x-flightX,m.y-py)<m.r+radius);
+    if(hit){hit.y=ch+100;flightShield=1.2;spawnParticles(flightX,py,'#fb923c');registerMistake();if(!isPlaying)return;}
+  }
+  for(const n of [...notes]){
+    if(!n.active||n.pairSeq!==streamIndex)continue;
+    const width=Math.min(cw/LANES-8,180);
+    ctx.font=`bold ${cw<500?13:15}px system-ui, sans-serif`;
+    const halfHeight=Math.max(50,wrapText(n.text,width-12).length*19+16)/2;
+    if(Math.abs(noteX(n)-flightX)<width/2+radius*.55&&Math.abs(n.y-py)<halfHeight+radius*.7){
+      if(n.isCorrect){processHitSuccess(n,noteX(n));}
+      else{n.active=false;spawnParticles(flightX,py,'#ef4444');registerMistake();if(isPlaying)retryFlight();}
+      break;
     }
   }
-});
-
-document.addEventListener('click', () => { if(isPlaying && controlMode === 'typing') typingInput.focus(); });
-
-function processHitSuccess(targetNote, hitX) {
-  targetNote.active = false;
-  let earned = 50 + combo*2;
-  if (isRealMode) earned *= 2;
-  score += earned;
-  combo++; wordIdx++;
-  spawnParticles(hitX, targetNote.y, "#4ade80"); playSound('hit'); updateVerseUI();
-
-  let activeCorrectNotes = notes.filter(n => n.isCorrect && n.active).length;
-  if(activeCorrectNotes === 0) {
-    notes.forEach(n => n.active = false);
-    if(wordIdx >= currentWords.length) setTimeout(loadNextVerse, 600);
-    else setTimeout(spawnRow, 200);
+}
+function drawFlightBackground(){
+  ctx.save();ctx.fillStyle='#64748b';ctx.globalAlpha=.28;
+  for(let i=0;i<28;i++){const x=((i*97)%1000)/1000*cw,y=playTop+((i*73+sceneTime*34)%(Math.max(1,ch-playTop)));ctx.fillRect(x,y,1.5,i%3?2:5);}
+  ctx.restore();
+}
+function drawFlightActors(){
+  ctx.save();ctx.beginPath();ctx.rect(0,playTop,cw,ch-playTop);ctx.clip();
+  for(const m of meteors){
+    ctx.save();ctx.translate(m.x,m.y);ctx.rotate(m.angle);ctx.fillStyle='#655a57';ctx.strokeStyle='#c0a18b';ctx.lineWidth=2;
+    ctx.beginPath();for(let j=0;j<8;j++){const a=j*Math.PI/4,r=m.r*(j%2?.86:1);j?ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r):ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r);}ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle='#413d3e';ctx.beginPath();ctx.arc(-m.r*.3,-m.r*.15,m.r*.24,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(m.r*.28,m.r*.32,m.r*.16,0,Math.PI*2);ctx.fill();ctx.restore();
   }
+  ctx.translate(flightX,flightY());
+  if(flightShield>0){ctx.strokeStyle='rgba(125,211,252,.7)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,28,0,Math.PI*2);ctx.stroke();}
+  ctx.fillStyle=feverLeft>0?'#fbbf24':'#7dd3fc';ctx.beginPath();ctx.moveTo(-7,17);ctx.lineTo(0,30+Math.sin(sceneTime*24)*5);ctx.lineTo(7,17);ctx.fill();
+  ctx.fillStyle='#496a87';ctx.strokeStyle='#b4d5ed';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,-19);ctx.lineTo(-27,19);ctx.lineTo(0,11);ctx.lineTo(27,19);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.fillStyle=petHurt>0?'#ffb4a2':'#f9d575';ctx.beginPath();ctx.ellipse(0,-2,12,15,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#222b3c';for(const x of [-4,4]){ctx.beginPath();ctx.arc(x,-5,1.5,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle='#d89137';ctx.beginPath();ctx.moveTo(-3,1);ctx.lineTo(3,1);ctx.lineTo(0,5);ctx.fill();ctx.restore();
 }
-
-function handleInput(x, y) { if(controlMode === 'touch') triggerLane(Math.floor(x / (cw/LANES)), x, y); }
-
-window.addEventListener('keydown', (e) => {
-  if(!isPlaying) return;
-  initSysAudio();
-  if(controlMode === 'touch') {
-    let k = e.key.toLowerCase(), l = -1;
-    if(k === '1' || k === 'a' || k === 'ㅁ') l = 0;
-    else if(k === '2' || k === 's' || k === 'ㄴ') l = 1;
-    else if(k === '3' || k === 'd' || k === 'ㅇ') l = 2;
-    else if(k === '4' || k === 'k' || k === 'ㅏ') l = 3;
-    else if(k === '5' || k === 'l' || k === 'ㅣ') l = 4;
-    if(l !== -1) triggerLane(l);
-  }
-});
-
-function updateInGameUI() {
-  document.getElementById('ui-score').innerText = score;
-  document.getElementById('ui-hit').innerText = combo + " CB";
-  let h = ""; for(let i=0; i<3; i++) h += i < lives ? "❤️" : "🖤";
-  document.getElementById('ui-lives').innerText = h;
+function updateFlightControls(){
+  const flying=document.querySelector('input[name="flow"]:checked').value==='flight';
+  document.querySelectorAll('input[name="control"]').forEach(e=>e.disabled=flying);
+  $('flight-help').classList.toggle('hidden',!flying);
 }
+canvas.addEventListener('pointermove',e=>{if(isPlaying&&!isPaused&&flowMode==='flight'&&flightPointer===e.pointerId){e.preventDefault();flightAim=e.clientX;}});
+for(const event of ['pointerup','pointercancel'])canvas.addEventListener(event,e=>{if(e.pointerId===flightPointer)flightPointer=null;});
+window.addEventListener('keyup',e=>{if(['ArrowLeft','KeyA'].includes(e.code))flightKeys.left=false;if(['ArrowRight','KeyD'].includes(e.code))flightKeys.right=false;});
+window.addEventListener('blur',()=>{flightKeys.left=false;flightKeys.right=false;});
 
-function showDamage() { let o = document.getElementById('damage-overlay'); o.style.opacity = 0.5; setTimeout(()=>o.style.opacity=0, 200); }
+for(const input of document.querySelectorAll('input[type="radio"]'))input.addEventListener('change',()=>{updateFlightControls();renderTrackList();});
+updateFlightControls();
+resize();updatePetLabel();
 
-function endStage(win) {
-  isPlaying = false; bgm.pause(); document.getElementById('game-ui').classList.add('hidden');
-  document.getElementById('typing-container').classList.add('hidden');
-
-  let isNewRecord = false;
-  if (win) {
-    localStorage.setItem('rev_clear_' + selectedTrackDef.id, 'true');
-    let oldScore = parseInt(localStorage.getItem('rev_score_' + selectedTrackDef.id) || 0);
-    if (score > oldScore) { localStorage.setItem('rev_score_' + selectedTrackDef.id, score); isNewRecord = true; }
-  }
-  const sc = document.getElementById('screen-result');
-  document.getElementById('result-title').innerText = win ? "CLEAR! 🎉" : "GAME OVER 😢";
-  document.getElementById('result-title').style.color = win ? "#4ade80" : "#ef4444";
-  document.getElementById('result-msg').innerText = win ? `[${selectedTrackDef.title}] 마스터!` : "조금만 더 집중해 보세요!";
-  document.getElementById('result-score').innerText = score;
-  const hsMsg = document.getElementById('result-highscore-msg');
-  if(isNewRecord) hsMsg.classList.remove('hidden'); else hsMsg.classList.add('hidden');
-  sc.classList.remove('hidden');
-}
-
-canvas.addEventListener('touchstart', e => { e.preventDefault(); initSysAudio(); for(let t of e.changedTouches) handleInput(t.clientX, t.clientY); }, {passive:false});
-canvas.addEventListener('mousedown', e => { initSysAudio(); handleInput(e.clientX, e.clientY); });
-window.onresize = resize;
-function resize() {
-  cw = canvas.width = window.innerWidth;
-  ch = canvas.height = window.innerHeight;
-  hitLineY = ch * 0.85;
-}
-window.visualViewport ? window.visualViewport.addEventListener('resize', resize) : null;
-resize();
-
-function spawnParticles(x, y, color) { for(let i=0; i<12; i++) particles.push({x, y, vx:(Math.random()-0.5)*400, vy:(Math.random()-0.5)*400, life:1, color}); }
-function updateParticles(dt) {
-  for(let i=particles.length-1; i>=0; i--) {
-    let p = particles[i]; p.x += p.vx*dt; p.y += p.vy*dt; p.life -= dt*2;
-    if(p.life <= 0) particles.splice(i,1); else { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2); ctx.fill(); }
-  }
-  ctx.globalAlpha = 1;
-}
 </script>
 </body>
 </html>
