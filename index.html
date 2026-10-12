@@ -105,7 +105,7 @@ html,body{background:#000000;color-scheme:dark}#canvas{background:#000000;opacit
 <div class="guide-li"><span class="text-purple-400 font-bold">생명력(❤️) 감소 조건</span><br>정답을 놓치거나, 오답을 잘못 치면 실수 스택이 쌓이며, <b>2번 실수마다</b> 하트가 깎입니다.</div>
 </div>
 
-<div class="setting-group"><div class="guide-li"><b style="color:#fde68a">🥚 장 전체를 완주하면 부화</b><br>도전 중 정답에 따라 알에 금이 생깁니다. 전체 도전 또는 스피드런을 처음부터 끝까지 완주해야 부화하며, 파트 연습은 부화에 합산되지 않습니다. 미완주 후 다시 시작하면 알의 진행은 초기화됩니다.<br>18장: 알 → 병아리(첫 완주) → 닭(이후 복습)<br>19장: 메추리 · 20장: 비둘기 · 21장: 참새 · 22장: 빛<br>완주한 장은 이후에도 완성된 모습으로 복습할 수 있습니다.</div><div class="guide-li"><b style="color:#fb923c">🔥 10콤보마다 피버 타임</b><br>10콤보를 달성한 뒤 6초 동안 점수 2배! 피버 중 다음 10콤보에 도달하면 6초로 갱신됩니다. 실수하면 피버가 종료됩니다. 실전 모드의 2배 점수와 중첩됩니다.</div><div class="guide-li">장별 부화 완료 기록은 같은 브라우저에 자동 저장됩니다. 다른 기기로 자동 이동하지 않으며 브라우저 데이터를 지우면 초기화됩니다. 일시정지하거나 다른 앱으로 전환하면 노트와 피버 시간이 함께 멈춥니다.</div></div>
+<div class="setting-group"><div class="guide-li"><b style="color:#fde68a">🥚 장 전체를 완주하면 부화</b><br>도전 중 정답에 따라 알에 금이 생깁니다. 전체 도전 또는 스피드런을 처음부터 끝까지 완주해야 부화하며, 파트 연습은 부화에 합산되지 않습니다. 미완주 후 다시 시작하면 알의 진행은 초기화됩니다.<br>모든 장: 알 → 랜덤 동물의 새끼(첫 전체 완주) → 같은 동물의 성체(이후 복습)<br>images/animals/01~30 폴더 중 새끼·성체 사진이 모두 있는 동물에서 같은 확률로 선택합니다.<br>완주한 장은 이후에도 같은 동물의 성체로 복습할 수 있습니다.</div><div class="guide-li"><b style="color:#fb923c">🔥 10콤보마다 피버 타임</b><br>10콤보를 달성한 뒤 6초 동안 점수 2배! 피버 중 다음 10콤보에 도달하면 6초로 갱신됩니다. 실수하면 피버가 종료됩니다. 실전 모드의 2배 점수와 중첩됩니다.</div><div class="guide-li">장별 부화 완료 기록은 같은 브라우저에 자동 저장됩니다. 다른 기기로 자동 이동하지 않으며 브라우저 데이터를 지우면 초기화됩니다. 일시정지하거나 다른 앱으로 전환하면 노트와 피버 시간이 함께 멈춥니다.</div></div>
 <button class="btn btn-outline mb-8" onclick="showScreen('screen-main')">메인으로 돌아가기</button>
 </div>
 
@@ -164,7 +164,7 @@ html,body{background:#000000;color-scheme:dark}#canvas{background:#000000;opacit
 <div class="text-xl font-black text-yellow-400 mb-1">SCORE: <span id="result-score">0</span></div>
 <div id="result-highscore-msg" class="text-xs text-emerald-400 font-bold hidden">🎉 신기록 달성! 🎉</div>
 </div>
-<p id="result-pet" class="result-detail"></p><p id="result-growth" class="result-detail"></p>
+<img id="result-animal-image" class="hidden" alt="동물" style="width:150px;height:150px;object-fit:contain;margin:8px auto"><p id="result-pet" class="result-detail"></p><p id="result-growth" class="result-detail"></p>
 <button class="btn mt-4" onclick="showScreen('screen-setup')">트랙 선택으로</button>
 </div>
 
@@ -207,21 +207,73 @@ let trackDefs = [], audioCtx;
 let storageOK = true;
 function readStore(key, fallback='0') { try { return localStorage.getItem(key) ?? fallback; } catch { storageOK=false; return fallback; } }
 function saveStore(key,value) { try { localStorage.setItem(key,String(value)); } catch { storageOK=false; } }
-const PETS={18:{name:'닭',icon:'🐔'},19:{name:'메추리',icon:'🐦'},20:{name:'비둘기',icon:'🕊️'},21:{name:'참새',icon:'🐦'},22:{name:'빛',icon:'✨'}};
-const chapterPets={};for(let c=18;c<=22;c++)chapterPets[c]=readStore('bs_chapter_hatched_'+c)==='true';
+
+// ===== 이미지 폴더 설정: 이 두 경로와 폴더 개수만 필요할 때 변경하세요. =====
+const PET_IMAGE_ROOT = 'images/animals';
+const PET_EGG_PATH = 'images/egg.png';
+const PET_FOLDER_COUNT = 30; // 01 ~ 30. 더 필요하면 이 숫자를 늘리세요.
+const folderPetList=[];
+let folderEggImage=null,activeFolderPet=null,petLaunchPending=false;
+function loadPetPicture(path){
+  return new Promise(resolve=>{
+    const image=new Image();let finished=false;
+    const finish=value=>{if(finished)return;finished=true;clearTimeout(timer);resolve(value);};
+    const timer=setTimeout(()=>finish(null),8000);
+    image.onload=()=>finish(image.naturalWidth?image:null);image.onerror=()=>finish(null);image.src=path;
+  });
+}
+// 정적 사이트는 폴더 목록을 읽을 수 없어 정해진 번호의 사진 존재 여부로 검색합니다.
+const folderPetsReady=Promise.all([
+  loadPetPicture(PET_EGG_PATH).then(img=>{folderEggImage=img;}),
+  ...Array.from({length:PET_FOLDER_COUNT},(_,i)=>{
+    const id=String(i+1).padStart(2,'0'),base=`${PET_IMAGE_ROOT}/${id}`;
+    return Promise.all([loadPetPicture(`${base}/baby.png`),loadPetPicture(`${base}/adult.png`)]).then(([baby,adult])=>{
+      if(baby&&adult)folderPetList.push({id,name:`동물 ${id}`,baby,adult});
+    });
+  })
+]).then(()=>folderPetList.sort((a,b)=>a.id.localeCompare(b.id)));
+const chapterPets={};
+for(let c=18;c<=22;c++){
+  try{const record=JSON.parse(readStore('bs_random_folder_pet_v1_'+c,'null'));if(record&&typeof record.id==='string')chapterPets[c]=record;}catch{}
+}
 let petHits=0,chapterTotal=1,petForm='egg';
 function petChapter(){return Number(selectedTrackDef?.ch||18);}
 function wholeChapter(){return selectedTrackDef&&selectedTrackDef.start===1&&selectedTrackDef.end===bibleData[selectedTrackDef.ch].length;}
+function chooseFolderPet(c){
+  const saved=chapterPets[c],known=saved&&folderPetList.find(p=>p.id===saved.id);
+  activeFolderPet=known||folderPetList[Math.floor(Math.random()*folderPetList.length)]||null;
+  petForm=known?'adult':'egg';
+}
 function petStatus(){
   const c=petChapter();
-  if(petForm==='chick')return '18장 · 병아리 탄생! 다음 복습부터 닭';
-  if(petForm==='adult')return `${c}장 · ${PETS[c].name} · 복습 중`;
+  if(petForm==='baby')return `${c}장 · 새끼 탄생! 다음 복습부터 성체`;
+  if(petForm==='adult')return `${c}장 · ${activeFolderPet?.name||'동물'} 성체 · 복습 중`;
   return `${c}장 · 알 ${Math.min(99,Math.floor(petHits/chapterTotal*100))}% · ${wholeChapter()?'전체 완주 시 부화':'파트 연습 · 부화는 전체 도전에서'}`;
 }
 function updatePetLabel(){
   $('pet-label').textContent=petStatus();
-  $('menu-pet').textContent=Object.keys(PETS).map(c=>`${c}장 ${chapterPets[c]?PETS[c].icon+' '+PETS[c].name:'🥚'}`).join(' · ');
-  $('storage-note').textContent=storageOK?'완주한 장의 부화만 저장됩니다. 미완주 도전은 다시 알부터 시작합니다.':'저장 불가 · 완료 기록은 이번 실행 동안만 유지됩니다.';
+  $('menu-pet').textContent=[18,19,20,21,22].map(c=>`${c}장 ${chapterPets[c]?'🐾 동물 '+chapterPets[c].id:'🥚'}`).join(' · ');
+  $('storage-note').textContent=storageOK?'완주한 동물만 저장됩니다. 미완주 도전은 다시 랜덤 알부터 시작합니다.':'저장 불가 · 완료 기록은 이번 실행 동안만 유지됩니다.';
+}
+function paintPetImage(image,x,y,size){
+  const scale=Math.min(size/image.naturalWidth,size/image.naturalHeight);
+  ctx.drawImage(image,x-image.naturalWidth*scale/2,y-image.naturalHeight*scale/2,image.naturalWidth*scale,image.naturalHeight*scale);
+}
+function drawPet(){
+  const floor=Math.min(ch*.73,playTop+(ch-playTop)*.66),size=Math.min(cw*.48,(ch-playTop)*.63,250);
+  const image=petForm==='egg'?folderEggImage:activeFolderPet?.[petForm];
+  if(petForm==='egg'&&!image){drawOriginalEgg();return;}
+  ctx.save();ctx.globalAlpha=.85;
+  const x=cw/2+(petHurt>0?Math.sin(sceneTime*45)*5:0),y=floor-size*.28-Math.sin(petBounce/.4*Math.PI)*14;
+  if(image)paintPetImage(image,x,y,size);
+  else {ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`${Math.round(size*.6)}px system-ui`;ctx.fillText('🐾',x,y);}
+  ctx.textAlign='center';ctx.textBaseline='alphabetic';ctx.font='12px system-ui';ctx.fillStyle='#e2e8f0';
+  ctx.fillText(petForm==='egg'?`완주를 기다리는 알 · ${Math.min(99,Math.floor(petHits/chapterTotal*100))}%`:petForm==='baby'?'새끼 탄생!':'성체 · 복습 중',cw/2,floor+size*.21);ctx.restore();
+}
+function updateResultPetImage(){
+  const out=$('result-animal-image'),image=petForm==='egg'?folderEggImage:activeFolderPet?.[petForm];
+  out.classList.toggle('hidden',!image);if(image)out.src=image.src;else out.removeAttribute('src');
+  out.alt=petForm==='egg'?'알':petForm==='baby'?'태어난 새끼':'성체';
 }
 function splitWords(text) {
   const result=[]; let temp='';
@@ -284,7 +336,7 @@ function renderTrackList() {
     b.onclick=()=>{initSysAudio();launchGame(td);};
     const title=document.createElement('span');title.className='track-title';title.textContent=td.title;
     const sub=document.createElement('span');sub.className='track-score';sub.textContent=`최고 기록: ${readStore(key)}${readStore(key+'_clear','')==='true'?' · CLEAR':''}`;
-    const pet=document.createElement('span');pet.className='track-score';pet.textContent=chapterPets[td.ch]?`${PETS[td.ch].icon} ${PETS[td.ch].name} · 복습`:(td.start===1&&td.end===bibleData[td.ch].length?'🥚 전체 완주하면 부화':'🥚 파트 연습 (부화 기록 없음)');
+    const pet=document.createElement('span');pet.className='track-score';pet.textContent=chapterPets[td.ch]?`🐾 동물 ${chapterPets[td.ch].id} · 성체 복습`:(td.start===1&&td.end===bibleData[td.ch].length?'🥚 전체 완주하면 부화':'🥚 파트 연습 (부화 기록 없음)');
     b.append(title,sub,pet);container.append(b);
   }
 }
@@ -292,9 +344,13 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));$(id).classList.remove('hidden');
   if(id==='screen-setup')changeQuarter();updatePetLabel();
 }
-function launchGame(td) {
+async function launchGame(td) {
+  if(petLaunchPending||isPlaying)return;
+  petLaunchPending=true;
+  try{await folderPetsReady;}finally{petLaunchPending=false;}
+
   cancelAnimationFrame(raf);pendingAction=null;pendingDelay=0;
-  selectedTrackDef=td;petHits=0;chapterTotal=bibleData[td.ch].reduce((sum,v)=>sum+splitWords(v.t).length,0);petForm=chapterPets[td.ch]?'adult':'egg';
+  selectedTrackDef=td;petHits=0;chapterTotal=bibleData[td.ch].reduce((sum,v)=>sum+splitWords(v.t).length,0);chooseFolderPet(td.ch);
   isRealMode=document.querySelector('input[name="difficulty"]:checked').value==='real';
   controlMode=document.querySelector('input[name="control"]:checked').value;
   speedMultiplier=+document.querySelector('input[name="speed"]:checked').value;
@@ -477,17 +533,19 @@ function endStage(win,quit=false){
   isPlaying=false;isPaused=false;cancelAnimationFrame(raf);pendingAction=null;pendingDelay=0;bgm.pause();
   $('game-ui').classList.add('hidden');typingContainer.classList.add('hidden');$('pause-overlay').classList.add('hidden');$('damage-overlay').style.opacity=0;
   let born=false;
-  if(win&&wholeChapter()&&!chapterPets[petChapter()]){
-    chapterPets[petChapter()]=true;saveStore('bs_chapter_hatched_'+petChapter(),'true');
-    petForm=petChapter()===18?'chick':'adult';born=true;playSound('hatch');
+  if(win&&wholeChapter()&&petForm==='egg'&&activeFolderPet){
+    chapterPets[petChapter()]={id:activeFolderPet.id};
+    saveStore('bs_random_folder_pet_v1_'+petChapter(),JSON.stringify(chapterPets[petChapter()]));
+    petForm='baby';born=true;playSound('hatch');
   }
   let best=false;
   if(win){const key=recordKey();saveStore(key+'_clear','true');if(score>Number(readStore(key))){saveStore(key,score);best=storageOK;}}
   $('result-title').textContent=quit?'잠깐 쉬어가기':win?'CLEAR! 🎉':'GAME OVER';$('result-title').style.color=win?'#4ade80':'#fbbf24';
   $('result-msg').textContent=win?`[${selectedTrackDef.title}] 마스터!`:quit?'미완주한 알은 다음 도전에서 처음부터 시작해요.':'다시 도전해봐요. 완주한 장의 부화 기록은 유지됩니다.';
   $('result-score').textContent=score;$('result-highscore-msg').classList.toggle('hidden',!best);
-  $('result-pet').textContent=`${petForm==='egg'?'🥚':petForm==='chick'?'🐥':PETS[petChapter()].icon} 이번 정답 +${sessionHits} · 최대 ${maxCombo}콤보 · 피버 ${fevers}회`;
-  $('result-growth').textContent=(born?(petForm==='chick'?'🐥 병아리가 태어났어요! 다음 복습에서는 닭으로 함께해요.':PETS[petChapter()].icon+' '+PETS[petChapter()].name+' 탄생!'):petForm!=='egg'?(win?'복습 완료 · 부화 기록 유지':'부화 기록은 유지됩니다.'):win?'파트 연습 완료 · 장 전체를 완주하면 부화해요.':'이번 알의 진행은 저장되지 않습니다.')+(storageOK?'':' · 저장 불가');
+  $('result-pet').textContent=`${petForm==='egg'?'🥚':petForm==='baby'?'🐣':'🐾'} 이번 정답 +${sessionHits} · 최대 ${maxCombo}콤보 · 피버 ${fevers}회`;
+  $('result-growth').textContent=(born?'새끼가 태어났어요! 다음 복습에서는 같은 동물의 성체로 함께해요.':petForm!=='egg'?(win?'복습 완료 · 동물 기록 유지':'동물 기록은 유지됩니다.'):win?(wholeChapter()&&!activeFolderPet?'완주 완료 · 동물 이미지가 없어 부화는 보류됩니다. images/animals/번호/baby.png와 adult.png를 넣어 주세요.':'파트 연습 완료 · 장 전체를 완주하면 랜덤 동물이 부화해요.'):'이번 알의 진행은 저장되지 않습니다.')+(storageOK?'':' · 저장 불가');
+  updateResultPetImage();
   if(!storageOK&&quit)$('result-msg').textContent='잠깐 쉬어가요. 이 환경에서는 성장 저장이 불가능해요.';
   showScreen('screen-result');
 }
@@ -519,7 +577,7 @@ window.addEventListener('resize',resize);window.visualViewport?.addEventListener
 function spawnParticles(x,y,color){for(let i=0;i<12;i++)particles.push({x,y,vx:(Math.random()-.5)*400,vy:(Math.random()-.5)*400,life:1,color});}
 function updateParticles(dt){for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt*2;if(p.life<=0)particles.splice(i,1);else{ctx.globalAlpha=p.life;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();}}ctx.globalAlpha=1;}
 // 노트 뒤에 그려지는 알·병아리 배경 애니메이션.
-function drawPet(){
+function drawOriginalEgg(){
   const floor=Math.min(ch*.73,playTop+(ch-playTop)*.66),size=Math.min(cw*.48,(ch-playTop)*.63,250),k=size/200;
   ctx.save();ctx.translate(cw/2,floor);ctx.scale(k,k);
   ctx.translate(petHurt>0?Math.sin(sceneTime*45)*5:0,-Math.sin(petBounce/.4*Math.PI)*14);
@@ -534,36 +592,8 @@ function drawPet(){
     ctx.strokeStyle='#596275';ctx.lineWidth=2.4;ctx.lineJoin='round';
     for(let i=0;i<Math.min(5,Math.floor(progress*6));i++){ctx.beginPath();cracks[i].forEach(([x,y],j)=>j?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.stroke();}
     ctx.fillStyle='#e2e8f0';ctx.font='12px system-ui';ctx.textAlign='center';ctx.fillText(`완주를 기다리는 알 · ${Math.floor(progress*100)}%`,0,42);
-  }else{
-    drawChapterCreature(petChapter(),petForm==='chick');
   }
   ctx.restore();
-}
-function drawChapterCreature(c,chick=false){
-  const oval=(x,y,rx,ry,color,angle=0)=>{ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(x,y,rx,ry,angle,0,Math.PI*2);ctx.fill();};
-  if(c===22){
-    const pulse=1+Math.sin(sceneTime*2)*.07;ctx.save();ctx.translate(0,-60);ctx.scale(pulse,pulse);
-    const glow=ctx.createRadialGradient(0,0,3,0,0,90);glow.addColorStop(0,petHurt>0?'#ffa3a3':'#fffde6');glow.addColorStop(.3,'rgba(255,224,120,.6)');glow.addColorStop(1,'rgba(255,220,110,0)');ctx.fillStyle=glow;ctx.fillRect(-95,-95,190,190);
-    ctx.rotate(sceneTime*.12);ctx.fillStyle=petHurt>0?'#ffb7a8':'#fff6be';ctx.beginPath();for(let i=0;i<16;i++){const a=i*Math.PI/8,r=i%2?12:i%4===0?59:34;i?ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r):ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r);}ctx.closePath();ctx.fill();ctx.restore();return;
-  }
-  const chicken=c===18&&!chick,quail=c===19,pigeon=c===20,sparrow=c===21;
-  const body=petHurt>0?'#e5a39a':chick?'#f2ce6c':chicken?'#f3e9d8':quail?'#b49a72':pigeon?'#c5cfdf':'#ad8864';
-  const wing=chick?'#dcb246':chicken?'#d6c7a6':quail?'#70583e':pigeon?'#8799b4':'#684e3a';
-  ctx.translate(0,Math.sin(sceneTime*3)*2);
-  // Tail, round body and wings keep the species readable behind falling notes.
-  if(!chick){for(let i=0;i<3;i++)oval(-42-i*3,-42-i*8,12,30,wing,-.7+i*.2);}
-  oval(0,-41,quail?45:47,quail?37:44,body);
-  ctx.save();ctx.translate(25,-42);ctx.rotate(Math.sin(sceneTime*5)*.07-petBounce*.5);oval(0,0,22,29,wing,-.4);ctx.restore();
-  oval(3,-83,31,32,body);
-  if(chicken){for(let i=0;i<3;i++)oval(-10+i*12,-114,9,13,'#d75954');oval(13,-61,7,12,'#d75954');}
-  if(quail){oval(4,-103,24,9,'#725438');for(let i=0;i<12;i++)oval(-29+(i%4)*15,-52+Math.floor(i/4)*13,2,4,'#68513c',-.3);}
-  if(sparrow){oval(4,-103,25,10,'#6a4d35');oval(-12,-78,12,10,'#eee1c7');oval(3,-66,7,10,'#443c35');}
-  if(pigeon){oval(6,-62,22,11,'#7caa9e');oval(-11,-86,8,7,'#e4d5bd');}
-  ctx.strokeStyle='#34333b';ctx.lineWidth=2.5;
-  for(const x of [-9,14]){if(petHurt>0){ctx.beginPath();ctx.moveTo(x-3,-89);ctx.lineTo(x+3,-83);ctx.moveTo(x+3,-89);ctx.lineTo(x-3,-83);ctx.stroke();}else oval(x,-86,2.8,3.8,'#34333b');}
-  ctx.fillStyle='#d49544';ctx.beginPath();ctx.moveTo(-2,-77);ctx.lineTo(10,-77);ctx.lineTo(4,-70);ctx.fill();
-  ctx.strokeStyle='#c99752';ctx.lineWidth=4;ctx.lineCap='round';for(const x of [-16,16]){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,13);ctx.lineTo(x-5,16);ctx.moveTo(x,13);ctx.lineTo(x+6,15);ctx.stroke();}
-  if(petHurt>0)oval(23,-71,4,7,'#91ccec');
 }
 
 // 비행 모드: 5개 레일의 무작위 두 문구 중 정답을 먹고 운석을 피합니다.
